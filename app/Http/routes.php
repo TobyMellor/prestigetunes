@@ -12,3 +12,13 @@
 */
 
 Route::get('/', 'IndexController@showDashboard');
+
+Route::get('/login', 'AuthController@index');
+Route::get('/register', function () {
+    return redirect('/login');
+});
+Route::post('/login', 'AuthController@authenticateUser');
+Route::post('/register', 'AuthController@registerUser');
+Route::get('/logout', 'AuthController@unauthenticateUser');
+
+Route::post('/api/create-playlist', 'ApiController@createPlaylist');

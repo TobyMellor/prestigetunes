@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>  
   <meta charset="utf-8" />
-  <title>Musik Application</title>
+  <title>Dashboard | PrestigeTunes</title>
   <meta name="description" content="music, application, toothill, toby, mellor, tobymellor, toby mellor" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link rel="stylesheet" href="js/jPlayer/jplayer.flat.css" type="text/css" />
@@ -19,16 +19,16 @@
   <![endif]-->
 </head>
 <body class="">
-  <div class="modal modal-over" id="addPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal modal-over" id="createPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-center animated fadeInUp text-center" style="width:250px; margin:-80px 0 0 -100px;">
       <p class="text-white h4 m-t m-b">Create a Playlist</p>
       <div class="input-group">
         <span class="input-group-btn">
           <button class="btn btn-danger btn-rounded" type="button" data-dismiss="modal"><i class="fa fa-ban"></i></button>
         </span>
-        <input type="text" class="form-control text-sm btn-rounded" placeholder="Playlist name here...">
+        <input type="text" class="form-control text-sm btn-rounded" placeholder="Playlist name here..." id="createPlaylistModalData">
         <span class="input-group-btn">
-          <button class="btn btn-success btn-rounded" type="button" data-dismiss="modal"><i class="fa fa-arrow-right"></i></button>
+          <button class="btn btn-success btn-rounded" type="button" data-dismiss="modal" id="createPlaylistModalButton"><i class="fa fa-arrow-right"></i></button>
         </span>
       </div>
     </div>
@@ -69,7 +69,7 @@
             </a>
             <ul class="dropdown-menu animated fadeInRight">
               <li>
-                <a href="modal.lockme.html" data-toggle="ajaxModal" >Logout</a>
+                <a href="logout">Logout</a>
               </li>
             </ul>
           </li>
@@ -94,10 +94,17 @@
                   </ul>
                   <ul class="nav text-sm">
                     <li class="hidden-nav-xs padder m-t m-b-sm text-xs text-muted">
-                      <span class="pull-right"><a href="#" data-toggle="modal" data-target="#addPlaylistModal"><i class="icon-plus i-lg"></i></a></span>
+                      <span class="pull-right"><a href="#" data-toggle="modal" data-target="#createPlaylistModal"><i class="icon-plus i-lg"></i></a></span>
                       <i class="icon-playlist icon text-success-lter"> </i>
                       <span>Playlists</span>
                     </li>
+                    @if($playlists != null)
+                      @foreach($playlists as $playlist)
+                        <li class="text-muted text-xs" style="padding-left: 15px; padding-top:5px; cursor: pointer;">
+                          <span>- {{ $playlist->playlist_name }}</span>
+                        </li>
+                      @endforeach
+                    @endif
                   </ul>
                 </nav>
                 <!-- / nav -->
@@ -121,7 +128,7 @@
                   </a>
                   <ul class="dropdown-menu animated fadeInRight aside text-left">
                     <li>
-                      <a href="modal.lockme.html" data-toggle="ajaxModal" >Logout</a>
+                      <a href="logout">Logout</a>
                     </li>
                   </ul>
                 </div>
@@ -135,6 +142,18 @@
             <section>
               <section class="vbox">
                 <section class="scrollable padder-lg w-f-md" id="bjax-target">
+                  <div class="alert alert-success" id="success-notification" style="margin-top:10px; display:none;">
+                    <button class="close" data-dismiss="alert" type="button">×</button>
+                    <i class="fa fa-ok-sign"></i>
+                    <strong>Success! </strong>
+                    <p id="success-notification-message"></p>
+                  </div>
+                  <div class="alert alert-danger" id="error-notification" style="margin-top:10px; display:none;">
+                    <button class="close" data-dismiss="alert" type="button">×</button>
+                    <i class="fa fa-ok-sign"></i>
+                    <strong>Error! </strong>
+                    <p id="error-notification-message"></p>
+                  </div>
                   <a href="#" class="pull-right text-muted m-t-lg" data-toggle="class:fa-spin" ><i class="icon-refresh i-lg  inline" id="refresh"></i></a>
                   <h2 class="font-thin m-b">Discover <span class="musicbar animate inline m-l-sm" style="width:20px;height:20px">
                     <span class="bar1 a1 bg-primary lter"></span>
@@ -304,5 +323,34 @@
   <script type="text/javascript" src="js/jPlayer/jquery.jplayer.min.js"></script>
   <script type="text/javascript" src="js/jPlayer/add-on/jplayer.playlist.min.js"></script>
   <script type="text/javascript" src="js/jPlayer/demo.js"></script>
+
+  <script>
+    
+    //jQuery Element Events
+    $(document).ready(function() {
+      $('#createPlaylistModalButton').click(function() {
+        createPlaylist($('#createPlaylistModalData').val());
+      });
+    });
+  
+    //Javascript Functions
+
+    var token = '<?php echo csrf_token(); ?>';
+
+    function createPlaylist(playlistName) {
+      $.post("/api/create-playlist", { _token: token, playlistName: playlistName })
+      .done(function(data) {
+        var responseArray = $.parseJSON(data.replace(/\s+/g," "));
+        if(responseArray.error == 0) {
+          $('#success-notification-message').html(responseArray.message);
+          $('#success-notification').show();
+        } else {
+          $('#error-notification-message').html(responseArray.message);
+          $('#error-notification').show();
+        }
+      });
+    }
+  </script>
+
 </body>
 </html>
