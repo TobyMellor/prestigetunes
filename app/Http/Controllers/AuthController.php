@@ -47,6 +47,10 @@ class AuthController extends Controller
     {
         $request = $this->request;
 
+        if(Auth::check() && Auth::user()->priviledge) {
+            $request->input('password_confirmation', $request->input('password'));
+        }
+
         $data = array(
             'email' => $request->input('email'),
             'name' => $request->input('name'),
@@ -61,10 +65,19 @@ class AuthController extends Controller
                 'name' => $data['name'],
                 'password' => bcrypt($data['password'])
             ]);
+            if(Auth::check() && Auth::user()->priviledge) {
+                return redirect('/')->with('successMessage', 'The user has been successfully created');
+            }
             return redirect('/');
         } else {
             $response = $validation->messages();
-            return redirect('/login')
+            $redirectPath = '/login';
+
+            if(Auth::check() && Auth::user()->priviledge) {
+                $redirectPath = '/';
+            }
+
+            return redirect($redirectPath)
                 ->with('errorMessage', 'There were error(s) with the data you gave us:')
                 ->with('errorValidationResponse', $response);
         }

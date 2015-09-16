@@ -16,13 +16,16 @@ class IndexController extends Controller
 
     public function showDashboard()
     {
+        if(Auth::user()->priviledge == 0) {
+            $playlists = $this->playlist->getPlaylists();
 
-        $playlists = $this->playlist->getPlaylists();
-
-        if(Auth::check()) {
-            return view('index')->with('playlists', $playlists);
-        } else {
-            return redirect('/login');
+            if(Auth::check()) {
+                return view('default.index')->with('playlists', $playlists);
+            } else {
+                return redirect('/login');
+            }
+        } elseif(Auth::user()->priviledge == 1) {
+            return view('admin.index');
         }
     }
 }
