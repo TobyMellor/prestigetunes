@@ -71,33 +71,29 @@
 		}
 	</style>
 	<section class="container">
-	  @if (session('errorMessage') != null)
-	    <br />
-	    <div class="container aside-xl">
-	      <div class="alert alert-danger">
-	        <button class="close" data-dismiss="alert" type="button">×</button>
-	        <i class="fa fa-ok-sign"></i>
-	        <strong>Error! </strong>
-	        <p>{{ session('errorMessage') }}</p>
-	        <ul>
-	            @foreach (session('errorValidationResponse')->all() as $error)
-	                <li>{{ $error }}</li>
-	            @endforeach
-	        </ul>
-	      </div>
-	    </div>
-	  @endif
-	  @if (session('successMessage') != null)
-	    <br />
-	    <div class="container aside-xl">
-	      <div class="alert alert-success">
-	        <button class="close" data-dismiss="alert" type="button">×</button>
-	        <i class="fa fa-ok-sign"></i>
-	        <strong>Success! </strong>
-	        <p>{{ session('successMessage') }}</p>
-	      </div>
-	    </div>
-	  @endif
+		@if($errorMessage != null)
+			<div class="alert alert-danger" style="margin-top: 5px;">
+				<button class="close" data-dismiss="alert" type="button">×</button>
+				<i class="fa fa-ok-sign"></i>
+				<strong>Error! </strong>
+				<p>{{ $errorMessage }}</p>
+				@if($errorValidationResponse != null)
+					<ul>
+					    @foreach ($errorValidationResponse->all() as $error)
+					        <li>{{ $error }}</li>
+					    @endforeach
+					</ul>
+				@endif
+		    </div>
+		@endif
+		@if($successMessage != null)
+			<div class="alert alert-success" style="margin-top: 5px;">
+				<button class="close" data-dismiss="alert" type="button">×</button>
+				<i class="fa fa-ok-sign"></i>
+				<strong>Success! </strong>
+				<p>{{ $successMessage }}</p>
+			</div>
+		@endif
       <section class="hbox stretch">
         <section id="content">
           <section class="vbox">
@@ -153,22 +149,22 @@
                       <div class="tab-content">
                         <div class="tab-pane active" id="users">
                   			<div class="row">
-	                        	<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin: 5px;">
+	                        	<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="margin: 5px; padding-right: 0px;">
 			                        <section class="panel panel-default">
 			                          	<header class="panel-heading font-bold">Create a new user</header>
 			                          	<div class="panel-body">
 			                          		<form action="/register" method="POST">
 			                          			<div class="form-group">
 			                          				<label>Email</label>
-			                          				<input class="form-control" type="email" placeholder="Enter email">
+			                          				<input name="email" class="form-control" type="email" placeholder="Enter email">
 			                          			</div>
 			                          			<div class="form-group">
 			                          				<label>Name</label>
-			                          				<input class="form-control" type="text" placeholder="Enter Name">
+			                          				<input name="name" class="form-control" type="text" placeholder="Enter Name">
 			                          			</div>
 			                          			<div class="form-group">
 			                          				<label>Password</label>
-			                          				<input class="form-control" type="text" placeholder="Password">
+			                          				<input name="password" class="form-control" type="text" placeholder="Password">
 			                          			</div>
 			                          			<input name="_token" value="<?php echo csrf_token(); ?>" hidden>
 			                          			<button class="btn btn-sm btn-default" type="submit">Create User</button>
@@ -176,6 +172,26 @@
 			                          	</div>
 			                        </section>
 		                        </div>
+		                        @if($users != null)
+		                        	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" style="margin: 5px; padding-left: 0px;">
+				                        <ul class="list-group no-radius m-b-none m-t-n-xxs list-group-lg no-border">
+				                        	@foreach($users as $user)
+												<li class="list-group-item" id="list-user-{{ $user->id }}">
+													<a class="thumb-sm pull-left m-r-sm" href="#">
+														<img class="img-circle" src="images/a0.png">
+													</a>
+													<a class="clear">
+														<small class="pull-right">{{ $signedUpArray[$user->id] }}</small>
+														<strong class="block">{{ $user->name }} | {{ $user->email }}</strong>
+														<small>Registered to the site</small>
+													</a>
+													<a class="btn btn-danger pull-right delete-user @if($user->id == Auth::user()->id) disabled @endif" style="padding: 0px 10px 4px; position: absolute; margin-top: -18px; right: 15px;" href="#" user="{{ $user->id }}">Delete</a>
+												</li>
+											@endforeach
+											<?php echo $users->render(); ?>
+										</ul>
+									</div>
+								@endif
 	                        </div>
                         </div>
                         <div class="tab-pane" id="artists">
@@ -205,4 +221,35 @@
       </section>
     </section>
   </section>
+  @stop
+
+  @section('scripts')
+  	<script>
+		//jQuery Element Events
+		$(document).ready(function() {
+			$('.delete-user').click(function() {
+				var userId = $(this).attr('user');
+				deleteUser(userId);
+			});
+		});
+    
+     	//Javascript Functions
+  		var token = '<?php echo csrf_token(); ?>';
+  		function deleteUser(userId) {
+  			$.ajax({
+  				url: "/api/user",
+  				type: 'DELETE',
+	  			data: {
+	  					_token: token,
+	  					userId: userId
+	  				}
+	  			})
+		        .done(function(data) {
+          			var responseArray = $.parseJSON(data.replace(/\s+/g," "));
+					if(responseArray.error == 0) {
+						$('#list-user-' + userId).fadeOut();
+					}
+		    });
+  		}
+  	</script>
   @stop

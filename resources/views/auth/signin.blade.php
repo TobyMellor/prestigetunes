@@ -11,9 +11,11 @@
         <strong>Error! </strong>
         <p>{{ session('errorMessage') }}</p>
         <ul>
+          @if(session('errorValidationResponse') != null)
             @foreach (session('errorValidationResponse')->all() as $error)
                 <li>{{ $error }}</li>
             @endforeach
+          @endif
         </ul>
       </div>
     </div>

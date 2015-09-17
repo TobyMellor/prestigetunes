@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+//TODO: check authentication on all API paths
+
 class ApiController extends Controller
 {
 
@@ -31,6 +33,21 @@ class ApiController extends Controller
 			$this->responseError = 1;
 			$this->responseMessage = 'Playlist name is not valid';
 		}
+    }
+
+    public function deleteUser(UserController $user)
+    {
+        $userId = $this->request->input('userId');
+
+        if(isset($userId) && $userId != null) {
+            if(!$user->deleteUser($userId)) {
+                $this->responseError = 1;
+                $this->responseMessage = 'You\'re not logged in or you tried deleting yourself. Try refreshing.';
+            }
+        } else {
+            $this->responseError = 1;
+            $this->responseMessage = 'User ID is not valid';
+        }
     }
 
     public function doValidation($type, $data)

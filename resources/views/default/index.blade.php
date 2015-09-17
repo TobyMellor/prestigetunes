@@ -299,31 +299,30 @@
   @stop
 
   @section('scripts')
-  <script>
+    <script>
+      
+      //jQuery Element Events
+      $(document).ready(function() {
+        $('#createPlaylistModalButton').click(function() {
+          createPlaylist($('#createPlaylistModalData').val());
+        });
+      });
     
-    //jQuery Element Events
-    $(document).ready(function() {
-      $('#createPlaylistModalButton').click(function() {
-        createPlaylist($('#createPlaylistModalData').val());
-      });
-    });
-  
-    //Javascript Functions
+      //Javascript Functions
+      var token = '<?php echo csrf_token(); ?>';
 
-    var token = '<?php echo csrf_token(); ?>';
-
-    function createPlaylist(playlistName) {
-      $.post("/api/create-playlist", { _token: token, playlistName: playlistName })
-      .done(function(data) {
-        var responseArray = $.parseJSON(data.replace(/\s+/g," "));
-        if(responseArray.error == 0) {
-          $('#success-notification-message').html(responseArray.message);
-          $('#success-notification').show();
-        } else {
-          $('#error-notification-message').html(responseArray.message);
-          $('#error-notification').show();
-        }
-      });
-    }
-  </script>
+      function createPlaylist(playlistName) {
+        $.post("/api/playlist", { _token: token, playlistName: playlistName })
+        .done(function(data) {
+          var responseArray = $.parseJSON(data.replace(/\s+/g," "));
+          if(responseArray.error == 0) {
+            $('#success-notification-message').html(responseArray.message);
+            $('#success-notification').show();
+          } else {
+            $('#error-notification-message').html(responseArray.message);
+            $('#error-notification').show();
+          }
+        });
+      }
+    </script>
   @stop

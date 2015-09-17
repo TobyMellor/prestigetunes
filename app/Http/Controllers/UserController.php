@@ -8,21 +8,21 @@ use Validator;
 
 use Illuminate\Http\Request;
 
-class AuthController extends Controller
+class UserController extends Controller
 {
 
-    public $request;
+    protected $request;
 
-	public function __construct(Request $request)
+    public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
     public function index()
     {
-    	if(Auth::check()) {
-        	return redirect('/');
-    	} else {
+        if(Auth::check()) {
+            return redirect('/');
+        } else {
             return view('auth.signin');
         }
     }
@@ -47,8 +47,12 @@ class AuthController extends Controller
     {
         $request = $this->request;
 
+        $redirectPath = '/login';
         if(Auth::check() && Auth::user()->priviledge) {
-            $request->input('password_confirmation', $request->input('password'));
+            $request->merge(array(
+                'password_confirmation' => $request->input('password')
+            ));
+            $redirectPath = '/';
         }
 
         $data = array(
@@ -70,17 +74,44 @@ class AuthController extends Controller
             }
             return redirect('/');
         } else {
-            $response = $validation->messages();
-            $redirectPath = '/login';
+            $ghostUser = User::where('email', $data['email'])->get();
 
-            if(Auth::check() && Auth::user()->priviledge) {
-                $redirectPath = '/';
+            if($ghostUser != null && isset($ghostUser->delete_at) && $ghostUser->deleted_at != null) {
+                $response = 'Looks like you\'ve signed up before, but have deleted your account.<br />Check your email to re-activate your account!';
+            } else {
+                $response = $validation->messages();
             }
 
             return redirect($redirectPath)
                 ->with('errorMessage', 'There were error(s) with the data you gave us:')
                 ->with('errorValidationResponse', $response);
         }
+    }
+
+    public function deleteUser($userId)
+    {
+        if(Auth::check()) {
+            if($userId != Auth::user()->id) {
+                User::destroy($userId);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getUsers($paginate = null)
+    {
+        if($paginate == null)
+            $users = User::all();
+        else
+            $users = User::paginate($paginate);
+        return $users;
+    }
+
+    public function getUser($userId)
+    {
+        $user = User::find($userId);
+        return $user;
     }
 
     protected function validator(array $data)
