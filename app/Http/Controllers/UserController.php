@@ -74,10 +74,16 @@ class UserController extends Controller
             }
             return redirect('/');
         } else {
-            $ghostUser = User::where('email', $data['email'])->get();
+            $ghostUser = User::onlyTrashed()->where('email', $data['email'])->first();
 
-            if($ghostUser != null && isset($ghostUser->delete_at) && $ghostUser->deleted_at != null) {
-                $response = 'Looks like you\'ve signed up before, but have deleted your account.<br />Check your email to re-activate your account!';
+            if($ghostUser != null && $ghostUser->trashed()) {
+                if(Auth::check() && Auth::user()->priviledge) {
+                    $ghostUser->restore();
+                    $ghostUser->save();
+                    $response = 'A user with this username has already signed up, but deleted their account.<br />Their account, with their old login information, is active again.';
+                } else {
+                    $response = 'Looks like you\'ve signed up before, but have deleted your account.<br />Check your email to re-activate your account!';
+                }
             } else {
                 $response = $validation->messages();
             }

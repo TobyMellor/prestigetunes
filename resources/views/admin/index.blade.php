@@ -78,11 +78,17 @@
 				<strong>Error! </strong>
 				<p>{{ $errorMessage }}</p>
 				@if($errorValidationResponse != null)
-					<ul>
-					    @foreach ($errorValidationResponse->all() as $error)
-					        <li>{{ $error }}</li>
-					    @endforeach
-					</ul>
+					@if(!is_string($errorValidationResponse))
+						<ul>
+						    @foreach ($errorValidationResponse->all() as $error)
+						        <li>{{ $error }}</li>
+						    @endforeach
+						</ul>
+					@else
+						<ul>
+							<li>{!! $errorValidationResponse !!}</li>
+						</ul>
+					@endif
 				@endif
 		    </div>
 		@endif
@@ -164,7 +170,99 @@
 			                          			</div>
 			                          			<div class="form-group">
 			                          				<label>Password</label>
-			                          				<input name="password" class="form-control" type="text" placeholder="Password">
+			                          				<input name="password" class="form-control" type="text" autocomplete="off" placeholder="Password">
+			                          			</div>
+			                          			<input name="_token" value="<?php echo csrf_token(); ?>" hidden>
+			                          			<button class="btn btn-sm btn-default" type="submit">Create User</button>
+			                          		</form>
+			                          	</div>
+			                        </section>
+		                        </div>
+		                        @if(isset($users))
+		                        	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" style="margin: 5px; padding-left: 0px;">
+				                        <ul class="list-group no-radius m-b-none m-t-n-xxs list-group-lg no-border">
+				                        	@foreach($users as $user)
+												<li class="list-group-item" id="list-user-{{ $user->id }}">
+													<a class="thumb-sm pull-left m-r-sm" href="#">
+														<img class="img-circle" src="images/a0.png">
+													</a>
+													<a class="clear">
+														<small class="pull-right">{{ $signedUpArray[$user->id] }}</small>
+														<strong class="block">{{ $user->name }} | {{ $user->email }}</strong>
+														<small>Registered to the site</small>
+													</a>
+													<a class="btn btn-danger pull-right delete-user @if($user->id == Auth::user()->id) disabled @endif" style="padding: 0px 10px 4px; position: absolute; margin-top: -18px; right: 15px;" href="#" user="{{ $user->id }}">Delete</a>
+												</li>
+											@endforeach
+											<br />
+											<?php echo $users->render(); ?>
+										</ul>
+									</div>
+								@endif
+	                        </div>
+                        </div>
+                        <div class="tab-pane" id="artists">
+                          <div class="row">
+	                        	<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="margin: 5px; padding-right: 0px;">
+			                        <section class="panel panel-default">
+			                          	<header class="panel-heading font-bold">Create a new artist</header>
+			                          	<div class="panel-body">
+			                          		<form action="/register" method="POST">
+			                          			<div class="form-group">
+			                          				<label>Artist Name</label>
+			                          				<input name="artist_name" class="form-control" type="text" autocomplete="off" placeholder="Enter Artists Name">
+			                          			</div>
+			                          			<div class="form-group">
+			                          				<label>Artist Image Location</label>
+			                          				<input name="artist_image_loc" class="form-control" type="text" autocomplete="off" placeholder="Image URL Here">
+			                          			</div>
+			                          			<input name="_token" value="<?php echo csrf_token(); ?>" hidden>
+			                          			<button class="btn btn-sm btn-default" type="submit">Create Artist</button>
+			                          		</form>
+			                          	</div>
+			                        </section>
+		                        </div>
+		                        @if(isset($artists))
+		                        	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" style="margin: 5px; padding-left: 0px;">
+				                        <ul class="list-group no-radius m-b-none m-t-n-xxs list-group-lg no-border">
+				                        	@foreach($artists as $artist)
+												<li class="list-group-item" id="list-user-{{ $user->id }}">
+													<a class="thumb-sm pull-left m-r-sm" href="#">
+														<img class="img-circle" src="images/a0.png">
+													</a>
+													<a class="clear">
+														<small class="pull-right">{{ $signedUpArray[$user->id] }}</small>
+														<strong class="block">{{ $user->name }} | {{ $user->email }}</strong>
+														<small>Registered to the site</small>
+													</a>
+													<a class="btn btn-danger pull-right delete-user @if($user->id == Auth::user()->id) disabled @endif" style="padding: 0px 10px 4px; position: absolute; margin-top: -18px; right: 15px;" href="#" user="{{ $user->id }}">Delete</a>
+												</li>
+											@endforeach
+											<br />
+											<?php echo $artists->render(); ?>
+										</ul>
+									</div>
+								@endif
+	                        </div>
+                        </div>
+                        <div class="tab-pane" id="albums">
+                          <div class="row">
+	                        	<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="margin: 5px; padding-right: 0px;">
+			                        <section class="panel panel-default">
+			                          	<header class="panel-heading font-bold">Create a new user</header>
+			                          	<div class="panel-body">
+			                          		<form action="/register" method="POST">
+			                          			<div class="form-group">
+			                          				<label>Email</label>
+			                          				<input name="email" class="form-control" type="email" placeholder="Enter email">
+			                          			</div>
+			                          			<div class="form-group">
+			                          				<label>Name</label>
+			                          				<input name="name" class="form-control" type="text" placeholder="Enter Name">
+			                          			</div>
+			                          			<div class="form-group">
+			                          				<label>Password</label>
+			                          				<input name="password" class="form-control" type="text" autocomplete="off" placeholder="Password">
 			                          			</div>
 			                          			<input name="_token" value="<?php echo csrf_token(); ?>" hidden>
 			                          			<button class="btn btn-sm btn-default" type="submit">Create User</button>
@@ -188,21 +286,12 @@
 													<a class="btn btn-danger pull-right delete-user @if($user->id == Auth::user()->id) disabled @endif" style="padding: 0px 10px 4px; position: absolute; margin-top: -18px; right: 15px;" href="#" user="{{ $user->id }}">Delete</a>
 												</li>
 											@endforeach
+											<br />
 											<?php echo $users->render(); ?>
 										</ul>
 									</div>
 								@endif
 	                        </div>
-                        </div>
-                        <div class="tab-pane" id="artists">
-                          <div class="text-center wrapper">
-                            <i class="fa fa-spinner fa fa-spin fa fa-large"></i>
-                          </div>
-                        </div>
-                        <div class="tab-pane" id="albums">
-                          <div class="text-center wrapper">
-                            <i class="fa fa-spinner fa fa-spin fa fa-large"></i>
-                          </div>
                         </div>
                         <div class="tab-pane" id="songs">
                           <div class="text-center wrapper">
