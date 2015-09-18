@@ -18,5 +18,5 @@ class Album extends Model
      *
      * @var array
      */
-    protected $fillable = ['album_name', 'album_image_loc'];
+    protected $fillable = ['album_name', 'album_image_loc', 'artist_id'];
 }

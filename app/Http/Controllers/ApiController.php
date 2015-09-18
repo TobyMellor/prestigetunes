@@ -92,10 +92,10 @@ class ApiController extends Controller
 
     public function __destruct()
     {
-    	$responseArray = array(
+    	$responseArray = [
     		'error' => $this->responseError,
     		'message' => $this->responseMessage
-    	);
+    	];
 
     	echo json_encode($responseArray);
     }

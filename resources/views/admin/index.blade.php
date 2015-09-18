@@ -1,6 +1,7 @@
 @extends('template.master')
 @section('title', 'Dashboard')
 @section('main')
+<link rel="stylesheet" href="js/chosen/chosen.css" type="text/css" />
 <body class="">
   <section class="vbox">
     <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
@@ -76,12 +77,12 @@
 				<button class="close" data-dismiss="alert" type="button">×</button>
 				<i class="fa fa-ok-sign"></i>
 				<strong>Error! </strong>
-				<p>{{ $errorMessage }}</p>
+				<p>{!! $errorMessage !!}</p>
 				@if($errorValidationResponse != null)
 					@if(!is_string($errorValidationResponse))
 						<ul>
 						    @foreach ($errorValidationResponse->all() as $error)
-						        <li>{{ $error }}</li>
+						        <li>{!! $error !!}</li>
 						    @endforeach
 						</ul>
 					@else
@@ -290,9 +291,49 @@
 	                        </div>
                         </div>
                         <div class="tab-pane" id="songs">
-                          <div class="text-center wrapper">
-                            <i class="fa fa-spinner fa fa-spin fa fa-large"></i>
-                          </div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="margin: 5px; padding-right: 0px;">
+							        <section class="panel panel-default">
+							          	<header class="panel-heading font-bold">Add a new song</header>
+							          	<div class="panel-body">
+							          		<form action="/song" method="POST">
+							          			<div class="form-group">
+							          				<label>Song Name</label>
+							          				<input name="song_name" class="form-control" type="text" autocomplete="off" placeholder="Enter Song Name">
+							          			</div>
+							          			<div class="form-group">
+							          				<label>Songs Album</label>
+								          			<select name="album_id" style="width: 350px;" class="chosen-select">
+														<option selected>Choose a album</option>
+								          				@if(isset($groupedArtists))
+								          					@foreach($groupedArtists as $artistsAlbums)
+																<optgroup label="{{ $artistsAlbums['artist'] }}">
+																	@foreach($artistsAlbums['albums'] as $album)
+																		<option value="{{ $album['album_id'] }}">{{ $album['album_name'] }}</option>
+																	@endforeach
+																</optgroup>
+								          					@endforeach
+								          				@endif
+							                        </select>
+						                        </div>
+							          			<div class="form-group">
+							          				<label>Song Path</label>
+							          				<input name="song_path" class="form-control" type="text" autocomplete="off" placeholder="URL or Filename of the song">
+							          			</div>
+							          			<div class="checkbox i-checks">
+													<label>
+														<input name="is_explicit" type="checkbox">
+														<i></i>
+														Is this song explicit?
+													</label>
+												</div>
+							          			<input name="_token" value="{{ csrf_token() }}" hidden>
+							          			<button class="btn btn-sm btn-default" type="submit">Add Song</button>
+							          		</form>
+							          	</div>
+							        </section>
+							    </div>
+							</div>
                         </div>
                       </div>
                     </section>
@@ -309,9 +350,12 @@
   @stop
 
   @section('scripts')
+  	<script src="js/chosen/chosen.jquery.min.js"></script>
   	<script>
 		//jQuery Element Events
 		$(document).ready(function() {
+			$('.chosen-container, .chosen-container-single').css('width', '100%')
+
 			$('.delete-user').click(function() {
 				var userId = $(this).attr('user');
 				deleteEntity(userId, 'user');

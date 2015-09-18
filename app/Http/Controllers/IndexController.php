@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\Album;
 
 use Carbon\Carbon;
 
@@ -34,11 +35,31 @@ class IndexController extends Controller
                     ->with('playlists', $playlists)
                     ->with('userName', Auth::user()->name);
             } elseif(Auth::user()->priviledge) {
+
+                $groupedArtists = [];
+                $artists = $this->artist->getArtists();
+                foreach($artists as $artist) {
+                    $selectedAlbums = [];
+                    $albums = Album::where('artist_id', $artist->id);
+                    if($albums->count() != 0) {
+                        foreach($albums->get() as $album) {
+                            $selectedAlbums[$album->id] = [
+                                'album_id' => $album->id,
+                                'album_name' => $album->album_name
+                            ];
+                        }
+                        $groupedArtists[$artist->id] = [
+                            'artist' => $artist->artist_name,
+                            'albums' => $selectedAlbums
+                        ];
+                    }
+                }
+
                 $users = $this->user->getUsers(10);
                 $artists = $this->artist->getArtists(10);
                 $albums = $this->album->getAlbums(10);
 
-                $signedUpArray = array();
+                $signedUpArray = [];
                 foreach($users as $user) {
                     $userCreatedAt = new Carbon($user->created_at);
                     $signedUpArray[$user->id] = $userCreatedAt->diffForHumans();
@@ -52,6 +73,8 @@ class IndexController extends Controller
                     ->with('users', $users)
                     ->with('artists', $artists)
                     ->with('albums', $albums)
+
+                    ->with('groupedArtists', $groupedArtists)
 
                     ->with('signedUpArray', $signedUpArray);
             }

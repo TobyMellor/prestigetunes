@@ -24,17 +24,19 @@ class AlbumController extends Controller
 
             $request = $this->request;
 
-            $data = array(
+            $data = [
                 'album_name' => $request->input('album_name'),
                 'album_image_loc' => $request->input('album_image_loc'),
-            );
+                'artist_id' => $request->input('artist_id'),
+            ];
 
             $validation = $this->validator($data);
 
             if(!$validation->fails()) {
                 Album::create([
                     'album_name' => $request->input('album_name'),
-                    'album_image_loc' => $request->input('album_image_loc')
+                    'album_image_loc' => $request->input('album_image_loc'),
+                    'artist_id' => $request->input('artist_id')
                 ]);
                 return redirect('/')->with('successMessage', 'The album has been successfully created');
             }
@@ -75,7 +77,8 @@ class AlbumController extends Controller
     {
         return Validator::make($data, [
             'album_name' => 'required|max:255|min:1|alpha_dash_spaces|unique:Albums',
-            'album_image_loc' => 'required|max:255|min:1|url'
+            'album_image_loc' => 'required|max:255|min:1|url',
+            'artist_id' => 'required|integer'
         ]);
     }
 }

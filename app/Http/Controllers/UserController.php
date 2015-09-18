@@ -49,18 +49,18 @@ class UserController extends Controller
 
         $redirectPath = '/login';
         if(Auth::check() && Auth::user()->priviledge) {
-            $request->merge(array(
+            $request->merge([
                 'password_confirmation' => $request->input('password')
-            ));
+            ]);
             $redirectPath = '/';
         }
 
-        $data = array(
+        $data = [
             'email' => $request->input('email'),
             'name' => $request->input('name'),
             'password' => $request->input('password'),
             'password_confirmation' => $request->input('password_confirmation'),
-        );
+        ];
 
         $validation = $this->validator($data);
         if(!$validation->fails()) {

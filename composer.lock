@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ff058cabaf296c8d02e4559c8a9e1128",
+    "hash": "fc186cecbfffc04c0ffd23de9d689a84",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -302,6 +302,42 @@
                 }
             ],
             "time": "2015-04-20 18:58:01"
+        },
+        {
+            "name": "james-heinrich/getid3",
+            "version": "v1.9.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JamesHeinrich/getID3.git",
+                "reference": "835a0db62993cb1d85925f9a8aefe13e4ebe2b67"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/835a0db62993cb1d85925f9a8aefe13e4ebe2b67",
+                "reference": "835a0db62993cb1d85925f9a8aefe13e4ebe2b67",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "getid3/getid3.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL"
+            ],
+            "description": "PHP script that extracts useful information from popular multimedia file formats",
+            "homepage": "http://www.getid3.org/",
+            "keywords": [
+                "codecs",
+                "php",
+                "tags"
+            ],
+            "time": "2015-09-14 05:42:21"
         },
         {
             "name": "jeremeamia/SuperClosure",

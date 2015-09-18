@@ -40,3 +40,4 @@ Route::delete('/api/artist', 'ApiController@deleteArtist');
  */
 Route::post('/artist', 'ArtistController@createArtist');
 Route::post('/album', 'AlbumController@createAlbum');
+Route::post('/song', 'SongController@createSong');

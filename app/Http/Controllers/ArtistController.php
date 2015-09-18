@@ -24,10 +24,10 @@ class ArtistController extends Controller
 
             $request = $this->request;
 
-            $data = array(
+            $data = [
                 'artist_name' => $request->input('artist_name'),
                 'artist_image_loc' => $request->input('artist_image_loc'),
-            );
+            ];
 
             $validation = $this->validator($data);
 
