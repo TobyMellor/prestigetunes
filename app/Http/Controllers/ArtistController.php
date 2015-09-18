@@ -22,6 +22,8 @@ class ArtistController extends Controller
     {
         if(Auth::check() && Auth::user()->priviledge) {
 
+            $request = $this->request;
+
             $data = array(
                 'artist_name' => $request->input('artist_name'),
                 'artist_image_loc' => $request->input('artist_image_loc'),
@@ -30,9 +32,9 @@ class ArtistController extends Controller
             $validation = $this->validator($data);
 
             if(!$validation->fails()) {
-                Album::create([
+                Artist::create([
                     'artist_name' => $request->input('artist_name'),
-                    'artist_image_loc' => $request->input('artist__image_loc'),
+                    'artist_image_loc' => $request->input('artist_image_loc'),
                     'followers' => 0
                 ]);
                 return redirect('/')->with('successMessage', 'The artist has been successfully created');
@@ -49,7 +51,7 @@ class ArtistController extends Controller
     public function deleteArtist($artistId)
     {
         if(Auth::check()) {
-            Album::destroy($artistId);
+            Artist::destroy($artistId);
             return true;
         }
         return false;
@@ -73,7 +75,7 @@ class ArtistController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'artist_name' => 'required|max:255|min:1|alpha_dash|unique:Artist',
+            'artist_name' => 'required|max:255|min:1|alpha_dash_spaces|unique:Artists',
             'artist_image_loc' => 'required|max:255|min:1|url'
         ]);
     }

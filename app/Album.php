@@ -12,4 +12,11 @@ class Album extends Model
      * @var string
      */
     protected $table = 'Albums';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['album_name', 'album_image_loc'];
 }

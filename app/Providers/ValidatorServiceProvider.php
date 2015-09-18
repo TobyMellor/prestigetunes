@@ -18,6 +18,11 @@ class ValidatorServiceProvider extends ServiceProvider
         {
             return preg_match('/^[\pL\s]+$/u', $value);
         });
+        
+        Validator::extend('alpha_dash_spaces', function($attribute, $value, $parameters)
+        {
+            return preg_match('/^[\w\-\s]+$/', $value);
+        });
     }
 
     /**

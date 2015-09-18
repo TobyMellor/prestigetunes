@@ -172,7 +172,7 @@
 			                          				<label>Password</label>
 			                          				<input name="password" class="form-control" type="text" autocomplete="off" placeholder="Password">
 			                          			</div>
-			                          			<input name="_token" value="<?php echo csrf_token(); ?>" hidden>
+			                          			<input name="_token" value="{{ csrf_token() }}" hidden>
 			                          			<button class="btn btn-sm btn-default" type="submit">Create User</button>
 			                          		</form>
 			                          	</div>
@@ -195,7 +195,7 @@
 												</li>
 											@endforeach
 											<br />
-											<?php echo $users->render(); ?>
+											{!! $users->render() !!}
 										</ul>
 									</div>
 								@endif
@@ -207,7 +207,7 @@
 			                        <section class="panel panel-default">
 			                          	<header class="panel-heading font-bold">Create a new artist</header>
 			                          	<div class="panel-body">
-			                          		<form action="/register" method="POST">
+			                          		<form action="/artist" method="POST">
 			                          			<div class="form-group">
 			                          				<label>Artist Name</label>
 			                          				<input name="artist_name" class="form-control" type="text" autocomplete="off" placeholder="Enter Artists Name">
@@ -216,7 +216,7 @@
 			                          				<label>Artist Image Location</label>
 			                          				<input name="artist_image_loc" class="form-control" type="text" autocomplete="off" placeholder="Image URL Here">
 			                          			</div>
-			                          			<input name="_token" value="<?php echo csrf_token(); ?>" hidden>
+			                          			<input name="_token" value="{{ csrf_token() }}" hidden>
 			                          			<button class="btn btn-sm btn-default" type="submit">Create Artist</button>
 			                          		</form>
 			                          	</div>
@@ -226,20 +226,20 @@
 		                        	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" style="margin: 5px; padding-left: 0px;">
 				                        <ul class="list-group no-radius m-b-none m-t-n-xxs list-group-lg no-border">
 				                        	@foreach($artists as $artist)
-												<li class="list-group-item" id="list-user-{{ $user->id }}">
+												<li class="list-group-item" id="list-artist-{{ $artist->id }}">
 													<a class="thumb-sm pull-left m-r-sm" href="#">
 														<img class="img-circle" src="images/a0.png">
 													</a>
 													<a class="clear">
-														<small class="pull-right">{{ $signedUpArray[$user->id] }}</small>
-														<strong class="block">{{ $user->name }} | {{ $user->email }}</strong>
-														<small>Registered to the site</small>
+														<small class="pull-right">{{ $artist->created_at }}</small>
+														<strong class="block">{{ $artist->artist_name }}</strong>
+														<small>Artist added to the site</small>
 													</a>
-													<a class="btn btn-danger pull-right delete-user @if($user->id == Auth::user()->id) disabled @endif" style="padding: 0px 10px 4px; position: absolute; margin-top: -18px; right: 15px;" href="#" user="{{ $user->id }}">Delete</a>
+													<a class="btn btn-danger pull-right delete-artist" style="padding: 0px 10px 4px; position: absolute; margin-top: -18px; right: 15px;" href="#" artist="{{ $artist->id }}">Delete</a>
 												</li>
 											@endforeach
 											<br />
-											<?php echo $artists->render(); ?>
+											{!! $artists->render() !!}
 										</ul>
 									</div>
 								@endif
@@ -249,45 +249,41 @@
                           <div class="row">
 	                        	<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="margin: 5px; padding-right: 0px;">
 			                        <section class="panel panel-default">
-			                          	<header class="panel-heading font-bold">Create a new user</header>
+			                          	<header class="panel-heading font-bold">Create a new album</header>
 			                          	<div class="panel-body">
-			                          		<form action="/register" method="POST">
+			                          		<form action="/album" method="POST">
 			                          			<div class="form-group">
-			                          				<label>Email</label>
-			                          				<input name="email" class="form-control" type="email" placeholder="Enter email">
+			                          				<label>Album Name</label>
+			                          				<input name="album_name" class="form-control" type="text" autocomplete="off" placeholder="Enter Album Name">
 			                          			</div>
 			                          			<div class="form-group">
-			                          				<label>Name</label>
-			                          				<input name="name" class="form-control" type="text" placeholder="Enter Name">
+			                          				<label>Album Image Location</label>
+			                          				<input name="album_image_loc" class="form-control" type="text" autocomplete="off" placeholder="Image URL Here">
 			                          			</div>
-			                          			<div class="form-group">
-			                          				<label>Password</label>
-			                          				<input name="password" class="form-control" type="text" autocomplete="off" placeholder="Password">
-			                          			</div>
-			                          			<input name="_token" value="<?php echo csrf_token(); ?>" hidden>
-			                          			<button class="btn btn-sm btn-default" type="submit">Create User</button>
+			                          			<input name="_token" value="{{ csrf_token() }}" hidden>
+			                          			<button class="btn btn-sm btn-default" type="submit">Create Album</button>
 			                          		</form>
 			                          	</div>
 			                        </section>
 		                        </div>
-		                        @if($users != null)
+		                        @if(isset($albums))
 		                        	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" style="margin: 5px; padding-left: 0px;">
 				                        <ul class="list-group no-radius m-b-none m-t-n-xxs list-group-lg no-border">
-				                        	@foreach($users as $user)
-												<li class="list-group-item" id="list-user-{{ $user->id }}">
+				                        	@foreach($albums as $album)
+												<li class="list-group-item" id="list-album-{{ $album->id }}">
 													<a class="thumb-sm pull-left m-r-sm" href="#">
 														<img class="img-circle" src="images/a0.png">
 													</a>
 													<a class="clear">
-														<small class="pull-right">{{ $signedUpArray[$user->id] }}</small>
-														<strong class="block">{{ $user->name }} | {{ $user->email }}</strong>
-														<small>Registered to the site</small>
+														<small class="pull-right">{{ $album->created_at }}</small>
+														<strong class="block">{{ $album->album_name }}</strong>
+														<small>Album added to the site</small>
 													</a>
-													<a class="btn btn-danger pull-right delete-user @if($user->id == Auth::user()->id) disabled @endif" style="padding: 0px 10px 4px; position: absolute; margin-top: -18px; right: 15px;" href="#" user="{{ $user->id }}">Delete</a>
+													<a class="btn btn-danger pull-right delete-album" style="padding: 0px 10px 4px; position: absolute; margin-top: -18px; right: 15px;" href="#" album="{{ $album->id }}">Delete</a>
 												</li>
 											@endforeach
 											<br />
-											<?php echo $users->render(); ?>
+											{!! $albums->render() !!}
 										</ul>
 									</div>
 								@endif
@@ -318,27 +314,38 @@
 		$(document).ready(function() {
 			$('.delete-user').click(function() {
 				var userId = $(this).attr('user');
-				deleteUser(userId);
+				deleteEntity(userId, 'user');
+			});
+
+			$('.delete-artist').click(function() {
+				var artistId = $(this).attr('artist');
+				deleteEntity(artistId, 'artist');
+			});
+
+			$('.delete-album').click(function() {
+				var albumId = $(this).attr('album');
+				deleteEntity(albumId, 'album');
 			});
 		});
     
      	//Javascript Functions
-  		var token = '<?php echo csrf_token(); ?>';
-  		function deleteUser(userId) {
+  		var token = '{{ csrf_token() }}';
+  		function deleteEntity(entityId, entityType) {
   			$.ajax({
-  				url: "/api/user",
+  				url: '/api/' + entityType,
   				type: 'DELETE',
 	  			data: {
 	  					_token: token,
-	  					userId: userId
+	  					entityId: entityId
 	  				}
 	  			})
 		        .done(function(data) {
           			var responseArray = $.parseJSON(data.replace(/\s+/g," "));
 					if(responseArray.error == 0) {
-						$('#list-user-' + userId).fadeOut();
+						$('#list-' + entityType + '-' + entityId).fadeOut();
 					}
 		    });
   		}
+
   	</script>
   @stop

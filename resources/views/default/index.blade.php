@@ -321,7 +321,7 @@
       });
     
       //Javascript Functions
-      var token = '<?php echo csrf_token(); ?>';
+      var token = '{{ csrf_token() }}';
 
       function createPlaylist(playlistName) {
         $.post("/api/playlist", { _token: token, playlistName: playlistName })

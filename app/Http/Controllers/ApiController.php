@@ -37,10 +37,40 @@ class ApiController extends Controller
 
     public function deleteUser(UserController $user)
     {
-        $userId = $this->request->input('userId');
+        $userId = $this->request->input('entityId');
 
         if(isset($userId) && $userId != null) {
             if(!$user->deleteUser($userId)) {
+                $this->responseError = 1;
+                $this->responseMessage = 'You\'re not logged in or you tried deleting yourself. Try refreshing.';
+            }
+        } else {
+            $this->responseError = 1;
+            $this->responseMessage = 'User ID is not valid';
+        }
+    }
+
+    public function deleteArtist(ArtistController $artist)
+    {
+        $artistId = $this->request->input('entityId');
+
+        if(isset($artistId) && $artistId != null) {
+            if(!$artist->deleteArtist($artistId)) {
+                $this->responseError = 1;
+                $this->responseMessage = 'You\'re not logged in or you tried deleting yourself. Try refreshing.';
+            }
+        } else {
+            $this->responseError = 1;
+            $this->responseMessage = 'User ID is not valid';
+        }
+    }
+
+    public function deleteAlbum(AlbumController $album)
+    {
+        $albumId = $this->request->input('entityId');
+
+        if(isset($albumId) && $albumId != null) {
+            if(!$album->deleteAlbum($albumId)) {
                 $this->responseError = 1;
                 $this->responseMessage = 'You\'re not logged in or you tried deleting yourself. Try refreshing.';
             }

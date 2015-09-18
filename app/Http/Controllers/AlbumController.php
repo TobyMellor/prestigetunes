@@ -22,6 +22,8 @@ class AlbumController extends Controller
     {
         if(Auth::check() && Auth::user()->priviledge) {
 
+            $request = $this->request;
+
             $data = array(
                 'album_name' => $request->input('album_name'),
                 'album_image_loc' => $request->input('album_image_loc'),
@@ -72,7 +74,7 @@ class AlbumController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'album_name' => 'required|max:255|min:1|alpha_dash|unique:Album',
+            'album_name' => 'required|max:255|min:1|alpha_dash_spaces|unique:Albums',
             'album_image_loc' => 'required|max:255|min:1|url'
         ]);
     }

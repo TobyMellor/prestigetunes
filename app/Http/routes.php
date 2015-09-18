@@ -11,8 +11,14 @@
 |
 */
 
+/**
+ * Routes used for showing views
+ */
 Route::get('/', 'IndexController@showDashboard');
 
+/**
+ * Routes used for Authentication
+ */
 Route::get('/login', 'UserController@index');
 Route::get('/register', function () {
     return redirect('/login');
@@ -21,5 +27,16 @@ Route::post('/login', 'UserController@authenticateUser');
 Route::post('/register', 'UserController@registerUser');
 Route::get('/logout', 'UserController@unauthenticateUser');
 
+/**
+ * Routes used by JavaScript AJAX only
+ */
 Route::post('/api/playlist', 'ApiController@createPlaylist');
 Route::delete('/api/user', 'ApiController@deleteUser');
+Route::delete('/api/album', 'ApiController@deleteAlbum');
+Route::delete('/api/artist', 'ApiController@deleteArtist');
+
+/**
+ * Routes used by forms
+ */
+Route::post('/artist', 'ArtistController@createArtist');
+Route::post('/album', 'AlbumController@createAlbum');
