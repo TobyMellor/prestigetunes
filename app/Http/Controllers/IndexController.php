@@ -30,7 +30,9 @@ class IndexController extends Controller
         if(Auth::check()) {
             if(!Auth::user()->priviledge) {
                 $playlists = $this->playlist->getPlaylists();
-                return view('default.index')->with('playlists', $playlists);
+                return view('default.index')
+                    ->with('playlists', $playlists)
+                    ->with('userName', Auth::user()->name);
             } elseif(Auth::user()->priviledge) {
                 $users = $this->user->getUsers(10);
                 $artists = $this->artist->getArtists(10);

@@ -48,7 +48,7 @@
               <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
                 <img src="images/a0.png" alt="...">
               </span>
-              John.Smith <b class="caret"></b>
+              {{ $userName }} <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInRight">
               <li>
@@ -70,21 +70,33 @@
                 <nav class="nav-primary hidden-xs">
                   <ul class="nav bg clearfix">
                     <li class="hidden-nav-xs padder m-t m-b-sm text-xs text-muted">
-                      <i class="icon-music-tone icon"> </i>
-                        <span>Discover</span>
+                      Discover
                     </li>
-                    <li class="m-b hidden-nav-xs"></li>
+                    <li>
+                      <a href="/">
+                        <i class="icon-disc icon text-success"></i>
+                        <span class="font-bold">What's new</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/">
+                        <i class="icon-music-tone-alt icon text-info"></i>
+                        <span class="font-bold">Genres</span>
+                      </a>
+                    </li>
                   </ul>
-                  <ul class="nav text-sm">
+                  <ul class="nav text-sm" id="playlist-list">
                     <li class="hidden-nav-xs padder m-t m-b-sm text-xs text-muted">
                       <span class="pull-right"><a href="#" data-toggle="modal" data-target="#createPlaylistModal"><i class="icon-plus i-lg"></i></a></span>
-                      <i class="icon-playlist icon text-success-lter"> </i>
-                      <span>Playlists</span>
+                      <span>Playlist</span>
                     </li>
                     @if($playlists != null)
                       @foreach($playlists as $playlist)
-                        <li class="text-muted text-xs" style="padding-left: 15px; padding-top:5px; cursor: pointer;">
-                          <span>- {{ $playlist->playlist_name }}</span>
+                        <li>
+                          <a href="#">
+                            <i class="icon-playlist icon text-success-lter"> </i>
+                            <span>{{ $playlist->playlist_name }}</span>
+                          </a>
                         </li>
                       @endforeach
                     @endif
@@ -103,7 +115,7 @@
                     </span>
                     <span class="hidden-nav-xs clear">
                       <span class="block m-l">
-                        <strong class="font-bold text-lt">John.Smith</strong> 
+                        <strong class="font-bold text-lt">{{ $userName }}</strong> 
                         <b class="caret"></b>
                       </span>
                       <span class="text-muted text-xs block m-l">Logout</span>
@@ -318,6 +330,11 @@
           if(responseArray.error == 0) {
             $('#success-notification-message').html(responseArray.message);
             $('#success-notification').show();
+            $.get('html-snippets/playlist-list.html', function (data) {
+              data = data.replace('%playlistName%', playlistName);
+              $('#playlist-list').append(data);
+              $('#newly-added-playlist').fadeIn().removeAttr('id');
+            });
           } else {
             $('#error-notification-message').html(responseArray.message);
             $('#error-notification').show();
