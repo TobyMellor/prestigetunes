@@ -22,6 +22,7 @@ class Song extends Model
         'song_name',
         'album_id',
         'song_duration',
-        'is_explicit'
+        'is_explicit',
+        'file_id'
     ];
 }

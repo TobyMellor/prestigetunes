@@ -2,7 +2,7 @@
 @section('title', 'Dashboard')
 @section('main')
 <link rel="stylesheet" href="js/chosen/chosen.css" type="text/css" />
-<body class="">
+<body class="">  
   <section class="vbox">
     <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
       <div class="navbar-header aside bg-info dk">
@@ -174,7 +174,7 @@
 			                          				<input name="password" class="form-control" type="text" autocomplete="off" placeholder="Password">
 			                          			</div>
 			                          			<input name="_token" value="{{ csrf_token() }}" hidden>
-			                          			<button class="btn btn-sm btn-default" type="submit">Create User</button>
+							          			<a class="btn btn-s-md btn-success" type="submit">Create User</a>
 			                          		</form>
 			                          	</div>
 			                        </section>
@@ -218,7 +218,7 @@
 			                          				<input name="artist_image_loc" class="form-control" type="text" autocomplete="off" placeholder="Image URL Here">
 			                          			</div>
 			                          			<input name="_token" value="{{ csrf_token() }}" hidden>
-			                          			<button class="btn btn-sm btn-default" type="submit">Create Artist</button>
+							          			<a class="btn btn-s-md btn-success" type="submit">Add Artist</a>
 			                          		</form>
 			                          	</div>
 			                        </section>
@@ -262,7 +262,7 @@
 			                          				<input name="album_image_loc" class="form-control" type="text" autocomplete="off" placeholder="Image URL Here">
 			                          			</div>
 			                          			<input name="_token" value="{{ csrf_token() }}" hidden>
-			                          			<button class="btn btn-sm btn-default" type="submit">Create Album</button>
+							          			<a class="btn btn-s-md btn-success" type="submit">Add Album</a>
 			                          		</form>
 			                          	</div>
 			                        </section>
@@ -316,10 +316,8 @@
 								          				@endif
 							                        </select>
 						                        </div>
-							          			<div class="form-group">
-							          				<label>Song Path</label>
-							          				<input name="song_path" class="form-control" type="text" autocomplete="off" placeholder="URL or Filename of the song">
-							          			</div>
+							          			<a class="btn btn-s-sm btn-info" data-toggle="ajaxModal" href="html-snippets/file-upload-modal.html" style="padding: 3px 12px;">Upload a Song File</a>
+							          			<p id="uploaded-files-list" style="display: none;"><strong>Your uploaded files:</strong></p>
 							          			<div class="checkbox i-checks">
 													<label>
 														<input name="is_explicit" type="checkbox">
@@ -328,11 +326,32 @@
 													</label>
 												</div>
 							          			<input name="_token" value="{{ csrf_token() }}" hidden>
-							          			<button class="btn btn-sm btn-default" type="submit">Add Song</button>
+							          			<button class="btn btn-s-md btn-success" type="submit">Add Song</button>
 							          		</form>
 							          	</div>
 							        </section>
 							    </div>
+		                        @if(isset($songs))
+		                        	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" style="margin: 5px; padding-left: 0px;">
+				                        <ul class="list-group no-radius m-b-none m-t-n-xxs list-group-lg no-border">
+				                        	@foreach($songs as $song)
+												<li class="list-group-item" id="list-song-{{ $song->id }}">
+													<a class="thumb-sm pull-left m-r-sm" href="#">
+														<img class="img-circle" src="images/a0.png">
+													</a>
+													<a class="clear">
+														<small class="pull-right">{{ $song->created_at }}</small>
+														<strong class="block">{{ $song->song_name }}</strong>
+														<small>Song added to the site</small>
+													</a>
+													<a class="btn btn-danger pull-right delete-song" style="padding: 0px 10px 4px; position: absolute; margin-top: -18px; right: 15px;" href="#" song="{{ $song->id }}">Delete</a>
+												</li>
+											@endforeach
+											<br />
+											{!! $songs->render() !!}
+										</ul>
+									</div>
+								@endif
 							</div>
                         </div>
                       </div>
@@ -370,10 +389,17 @@
 				var albumId = $(this).attr('album');
 				deleteEntity(albumId, 'album');
 			});
+
+			$('.delete-song').click(function() {
+				var songId = $(this).attr('song');
+				deleteEntity(songId, 'song');
+			});
 		});
     
      	//Javascript Functions
   		var token = '{{ csrf_token() }}';
+  		var uploadedArray = [];
+
   		function deleteEntity(entityId, entityType) {
   			$.ajax({
   				url: '/api/' + entityType,
@@ -389,6 +415,15 @@
 						$('#list-' + entityType + '-' + entityId).fadeOut();
 					}
 		    });
+  		}
+
+  		function showUploadedSongs() {
+  			if(uploadedArray != null) {
+  				for (var i = 0; i < uploadedArray.length; i++) {
+				    $('#uploaded-files-list').append('<div class="radio i-checks"><label><input type="radio" value="' + uploadedArray[i] + '" name="song_file"><i></i>' + uploadedArray[i] + '</label></div>');
+				}
+				$('#uploaded-files-list').fadeIn();
+  			}
   		}
 
   	</script>

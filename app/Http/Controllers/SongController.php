@@ -28,42 +28,53 @@ class SongController extends Controller
 
             $songName = $request->input('song_name');
             $albumId = $request->input('album_id');
-            $songPath = $request->input('song_path');
-            $songDuration = $this->file->getSongDuration(__DIR__ . '/' . $songPath);
-            $isExplicit = $request->input('is_explicit');
+            $songFile = $request->input('song_file');
 
-            if($isExplicit == null) {
-                $isExplicit = false;
-            } else {
-                $isExplicit = true;
-            }
+            $songFileArray = $this->file->renameFile($songFile, $songName);
+            $songFile = $songFileArray['file_name'];
+            $songFileId = $songFileArray['file_id'];
 
-            if($songDuration != 0) {
-                $data = [
-                    'song_name' => $songName,
-                    'album_id' => $albumId,
-                    'song_duration' => $songDuration,
-                    'is_explicit' => $isExplicit
-                ];
+            if($songFile != false) {
 
-                $validation = $this->validator($data);
+                $songDuration = $this->file->getSongDuration(base_path('app/Http/uploads/') . $songFile);
+                $isExplicit = $request->input('is_explicit');
 
-                if(!$validation->fails()) {
-                    Song::create([
+                if($isExplicit == null) {
+                    $isExplicit = false;
+                } else {
+                    $isExplicit = true;
+                }
+
+                if($songDuration != 0) {
+                    $data = [
                         'song_name' => $songName,
                         'album_id' => $albumId,
                         'song_duration' => $songDuration,
                         'is_explicit' => $isExplicit
-                    ]);
-                    return redirect('/')->with('successMessage', 'The song has been successfully created');
-                }
+                    ];
 
-                $response = $validation->messages();
-                return redirect('/')
-                    ->with('errorMessage', 'There were error(s) with the data you gave us:')
-                    ->with('errorValidationResponse', $response);
+                    $validation = $this->validator($data);
+
+                    if(!$validation->fails()) {
+                        Song::create([
+                            'song_name' => $songName,
+                            'album_id' => $albumId,
+                            'song_duration' => $songDuration,
+                            'is_explicit' => $isExplicit,
+                            'file_id' => $songFileId
+                        ]);
+                        return redirect('/')->with('successMessage', 'The song has been successfully created');
+                    }
+
+                    $response = $validation->messages();
+                    return redirect('/')
+                        ->with('errorMessage', 'There were error(s) with the data you gave us:')
+                        ->with('errorValidationResponse', $response);
+                } else {
+                    return redirect('/')->with('errorMessage', 'An internal server error occured whilst checking the duration of the song.<br />Make sure the file is valid, then try again.');
+                }
             } else {
-                return redirect('/')->with('errorMessage', 'An internal server error occured whilst checking the duration of the song.<br />Make sure the file is valid, then try again.');
+                return redirect('/')->with('errorMessage', 'We couldn\'t find your uploaded file. Try again.');
             }
         }
     }
@@ -71,8 +82,12 @@ class SongController extends Controller
     public function deleteSong($songId)
     {
         if(Auth::check()) {
-            Song::destroy($songId);
-            return true;
+            $song = Song::where('id', $songId)->first();
+
+            if($this->file->deleteFile($song->file_id)) {
+                Song::destroy($songId);
+                return true;
+            }
         }
         return false;
     }

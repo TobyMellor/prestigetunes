@@ -1,0 +1,30 @@
+<!-- Load Styles/ Scripts for file upload here, since they're outside of the DOM -->
+<link rel="stylesheet" href="css/file-upload.css" type="text/css" />
+
+<script src="js/jquery.knob.js"></script>
+<script src="js/jquery.ui.widget.js"></script>
+<script src="js/jquery.iframe-transport.js"></script>
+<script src="js/jquery.fileupload.js"></script>
+<script src="js/file-upload.js"></script>
+
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Upload a song file</h4>
+    </div>
+    <div class="modal-body">
+      <form id="upload" enctype="multipart/form-data" action="/upload" method="POST" style="margin: 0 auto 0;">
+        <div id="drop" style="padding: 40px 0;">
+          Drop Here
+          <a>Browse</a>
+          <input type="file" multiple="" name="upl">
+        </div>
+        <ul style="padding-left: 0px;"> </ul>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" onClick="if(!$(this).hasClass('disabled')){ showUploadedSongs(); }" id="modal-proceed-button" class="btn btn-primary" data-dismiss="modal">Proceed</a>
+    </div>
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

@@ -34,6 +34,7 @@ Route::post('/api/playlist', 'ApiController@createPlaylist');
 Route::delete('/api/user', 'ApiController@deleteUser');
 Route::delete('/api/album', 'ApiController@deleteAlbum');
 Route::delete('/api/artist', 'ApiController@deleteArtist');
+Route::delete('/api/song', 'ApiController@deleteSong');
 
 /**
  * Routes used by forms
@@ -41,3 +42,4 @@ Route::delete('/api/artist', 'ApiController@deleteArtist');
 Route::post('/artist', 'ArtistController@createArtist');
 Route::post('/album', 'AlbumController@createAlbum');
 Route::post('/song', 'SongController@createSong');
+Route::post('/upload', 'ApiController@uploadSong');

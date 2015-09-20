@@ -18,6 +18,7 @@ class CreateSongsTable extends Migration
             $table->integer('album_id');
             $table->integer('song_duration');
             $table->integer('is_explicit');
+            $table->integer('file_id')->unique();
             $table->timestamps();
         });
     }

@@ -17,13 +17,15 @@ class IndexController extends Controller
         PlaylistController $playlist,
         UserController $user,
         ArtistController $artist,
-        AlbumController $album
+        AlbumController $album,
+        SongController $song
     )
     {
         $this->playlist = $playlist;
         $this->user = $user;
         $this->artist = $artist;
         $this->album = $album;
+        $this->song = $song;
     }
 
     public function showDashboard()
@@ -58,6 +60,7 @@ class IndexController extends Controller
                 $users = $this->user->getUsers(10);
                 $artists = $this->artist->getArtists(10);
                 $albums = $this->album->getAlbums(10);
+                $songs = $this->song->getSongs(10);
 
                 $signedUpArray = [];
                 foreach($users as $user) {
@@ -73,6 +76,7 @@ class IndexController extends Controller
                     ->with('users', $users)
                     ->with('artists', $artists)
                     ->with('albums', $albums)
+                    ->with('songs', $songs)
 
                     ->with('groupedArtists', $groupedArtists)
 
