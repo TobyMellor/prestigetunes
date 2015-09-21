@@ -174,7 +174,7 @@
 			                          				<input name="password" class="form-control" type="text" autocomplete="off" placeholder="Password">
 			                          			</div>
 			                          			<input name="_token" value="{{ csrf_token() }}" hidden>
-							          			<a class="btn btn-s-md btn-success" type="submit">Create User</a>
+							          			<button class="btn btn-s-md btn-success" type="submit">Create User</button>
 			                          		</form>
 			                          	</div>
 			                        </section>
@@ -218,7 +218,7 @@
 			                          				<input name="artist_image_loc" class="form-control" type="text" autocomplete="off" placeholder="Image URL Here">
 			                          			</div>
 			                          			<input name="_token" value="{{ csrf_token() }}" hidden>
-							          			<a class="btn btn-s-md btn-success" type="submit">Add Artist</a>
+							          			<button class="btn btn-s-md btn-success" type="submit">Add Artist</button>
 			                          		</form>
 			                          	</div>
 			                        </section>
@@ -261,8 +261,19 @@
 			                          				<label>Album Image Location</label>
 			                          				<input name="album_image_loc" class="form-control" type="text" autocomplete="off" placeholder="Image URL Here">
 			                          			</div>
+			                          			<div class="form-group">
+							          				<label>Artist</label>
+								          			<select name="artist_id" style="width: 350px;" class="chosen-select">
+														<option selected>Choose an artist</option>
+								          				@if(isset($artists))
+								          					@foreach($artists as $artist)
+																<option value="{{ $artist->id }}">{{ $artist->artist_name }}</option>
+								          					@endforeach
+								          				@endif
+							                        </select>
+						                        </div>
 			                          			<input name="_token" value="{{ csrf_token() }}" hidden>
-							          			<a class="btn btn-s-md btn-success" type="submit">Add Album</a>
+							          			<button class="btn btn-s-md btn-success" type="submit">Add Album</button>
 			                          		</form>
 			                          	</div>
 			                        </section>

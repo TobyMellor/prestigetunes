@@ -12,4 +12,9 @@ class Playlist extends Model
      * @var string
      */
     protected $table = 'Playlists';
+
+    public function playlistContent()
+    {
+    	return $this->hasMany(PlaylistContent::class);
+    }
 }

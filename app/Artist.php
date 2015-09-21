@@ -19,4 +19,10 @@ class Artist extends Model
      * @var array
      */
     protected $fillable = ['artist_name', 'artist_image_loc', 'followers'];
+
+    public function albums()
+    {
+        return $this->hasMany(Album::class);
+    }
 }
+

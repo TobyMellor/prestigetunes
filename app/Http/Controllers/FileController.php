@@ -43,7 +43,7 @@ class FileController extends Controller
             ];
 
             if (isset($files['upl']) && $files['upl']['error'] == 0) {
-                $destinationPath = __DIR__ . '/../uploads/';
+                $destinationPath = base_path('public/uploads');
 
                 foreach ($files as $file) {
 
@@ -74,16 +74,16 @@ class FileController extends Controller
 
     public function renameFile($songFile, $songName)
     {
-        $destinationPath = base_path('app/Http/uploads/');
-        $files = File::where('user_id', Auth::user()->id)
-            ->where('file_name', 'LIKE', '%' . $songFile)
+        $destinationPath = base_path('public/uploads');
+        $file = File::where('user_id', Auth::user()->id)
+            ->where('file_name', 'LIKE', '%- ' . $songFile)
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if($files != null) {
-            $file = $files->first();
+        if($file != null) {
             $oldFileName = $file->file_name;
-            $file->file_name = camel_case($songName) . '.mp3';
+            
+            $file->file_name = str_replace('?', '', camel_case($songName)) . '.mp3';
             if(!Storage::exists($destinationPath . camel_case($songName) . '.mp3')) {
                 rename($destinationPath . $oldFileName, $destinationPath . $file->file_name);
             }

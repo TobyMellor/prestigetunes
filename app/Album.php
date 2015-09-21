@@ -19,4 +19,9 @@ class Album extends Model
      * @var array
      */
     protected $fillable = ['album_name', 'album_image_loc', 'artist_id'];
+
+    public function artist()
+    {
+        return $this->belongsTo(Artist::class, 'artist_id');
+    }
 }

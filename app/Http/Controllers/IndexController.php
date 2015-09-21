@@ -33,9 +33,21 @@ class IndexController extends Controller
         if(Auth::check()) {
             if(!Auth::user()->priviledge) {
                 $playlists = $this->playlist->getPlaylists();
+
+                $lastActivePlaylistContents = $this->playlist->getLastActivePlaylistContents();
+
+                $newSongs = $this->song->getSongs(8, 'new');
+                $topSongs = $this->song->getSongs(10, 'top');
+                $randomSongs = $this->song->getSongs(12, 'random');
+
                 return view('default.index')
                     ->with('playlists', $playlists)
-                    ->with('userName', Auth::user()->name);
+                    ->with('lastActivePlaylistContents', $lastActivePlaylistContents)
+                    ->with('userName', Auth::user()->name)
+
+                    ->with('newSongs', $newSongs)
+                    ->with('topSongs', $topSongs)
+                    ->with('randomSongs', $randomSongs);
             } elseif(Auth::user()->priviledge) {
 
                 $groupedArtists = [];

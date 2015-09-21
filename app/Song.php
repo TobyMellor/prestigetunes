@@ -25,4 +25,14 @@ class Song extends Model
         'is_explicit',
         'file_id'
     ];
+
+    public function album()
+    {
+        return $this->belongsTo(Album::class, 'album_id');
+    }
+
+    public function file()
+    {
+        return $this->hasOne(File::class, 'id');
+    }
 }
