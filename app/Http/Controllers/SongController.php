@@ -39,7 +39,7 @@ class SongController extends Controller
 
                 if($songFile != false) {
 
-                    $songDuration = $this->file->getSongDuration(base_path('public/uploads') . $songFile);
+                    $songDuration = $this->file->getSongDuration(base_path('public/uploads') . '/' . $songFile);
                     $isExplicit = $request->input('is_explicit');
 
                     if($isExplicit == null) {
@@ -132,7 +132,7 @@ class SongController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'song_name' => 'required|max:30|min:1|alpha_dash_spaces|unique:Songs',
+            'song_name' => 'required|between:1,30|alpha_dash_spaces|unique:Songs',
             'album_id' => 'required|integer',
             'song_duration' => 'required|integer',
             'is_explicit' => 'required|boolean'

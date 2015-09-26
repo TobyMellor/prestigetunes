@@ -33,6 +33,6 @@ class Song extends Model
 
     public function file()
     {
-        return $this->hasOne(File::class, 'id');
+        return $this->belongsTo(File::class, 'file_id');
     }
 }

@@ -4,13 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Validator;
+
 //TODO: check authentication on all API paths
+//TODO: Better error messaging system
+//TODO: Better array creation (creating a blank response stdclass)
 
 class ApiController extends Controller
 {
 
 	private $responseError = 0;
 	private $responseMessage = 'Action was successful';
+    private $playlistContentsArray;
 	private $request;
 
 	public function __construct(Request $request)
@@ -24,7 +29,9 @@ class ApiController extends Controller
 
     	if(isset($playlistName)
     			&& $playlistName != null
-    			&& $this->doValidation('playlist', $playlistName)) {
+    			&& $this->doValidation('playlistName', [
+                    'playlistName' => $playlistName
+                ])) {
 			if(!$playlist->createPlaylist($playlistName)) {
 				$this->responseError = 1;
 				$this->responseMessage = 'You are not logged in, try refreshing';
@@ -33,6 +40,23 @@ class ApiController extends Controller
 			$this->responseError = 1;
 			$this->responseMessage = 'Playlist name is not valid';
 		}
+    }
+
+    public function getPlaylist(PlaylistController $playlist)
+    {
+        $playlistId = $this->request->input('playlistId');
+
+        if(isset($playlistId)
+                && $playlistId != null
+                && $this->doValidation('playlistId', [
+                    'playlistId' => $playlistId
+                ])) {
+            $playlistContents = $playlist->getPlaylist($playlistId);
+            $this->playlistContentsArray = $playlistContents;
+        } else {
+            $this->responseError = 1;
+            $this->responseMessage = 'Playlist ID is not valid. Try refreshing the page.';
+        }
     }
 
     public function uploadSong(FileController $file)
@@ -124,12 +148,19 @@ class ApiController extends Controller
 
     public function doValidation($type, $data)
     {
-    	if($type == 'playlist') {
-    		if(strlen($data) <= 3 || strlen($data) >= 20) {
-    			return false;
-    		}
-    	}
-    	return true;
+    	if($type == 'playlistName') {
+            $validation = [
+                'playlistName' => 'string|between:3,20|alpha_dash_spaces'
+            ];
+    	} elseif($type == 'playlistId') {
+            $validation = [
+                'playlistId' => 'integer|exists:Playlists,id'
+            ];
+        } else {
+            return false;
+        }
+
+        return Validator::make($data, $validation);
     }
 
     public function __destruct()
@@ -138,6 +169,10 @@ class ApiController extends Controller
     		'error' => $this->responseError,
     		'message' => $this->responseMessage
     	];
+
+        if($this->playlistContentsArray != null) {
+            $responseArray['playlistContentsArray'] = $this->playlistContentsArray;
+        }
 
     	echo json_encode($responseArray);
     }

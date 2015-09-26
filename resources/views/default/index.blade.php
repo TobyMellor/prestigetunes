@@ -25,7 +25,7 @@
         <a href="index.html" class="navbar-brand text-lt">
           <i class="icon-earphones"></i>
           <img src="images/logo.png" alt="." class="hide">
-          <span class="hidden-nav-xs m-l-sm">Musik</span>
+          <span class="hidden-nav-xs m-l-sm">PrestigeTunes</span>
         </a>
         <a class="btn btn-link visible-xs" data-toggle="dropdown" data-target=".user">
           <i class="icon-settings"></i>
@@ -93,7 +93,7 @@
                     @if($playlists != null)
                       @foreach($playlists as $playlist)
                         <li>
-                          <a href="#">
+                          <a href="#" onclick="loadPlaylistDashboard({{ $playlist->id }})">
                             <i class="icon-playlist icon text-success-lter"> </i>
                             <span>{{ $playlist->playlist_name }}</span>
                           </a>
@@ -136,120 +136,122 @@
           <section class="hbox stretch">
             <section>
               <section class="vbox">
-                <section class="scrollable padder-lg w-f-md" id="bjax-target">
-                  <div class="alert alert-success" id="success-notification" style="margin-top:10px; display:none;">
-                    <button class="close" data-dismiss="alert" type="button">×</button>
-                    <i class="fa fa-ok-sign"></i>
-                    <strong>Success! </strong>
-                    <p id="success-notification-message"></p>
-                  </div>
-                  <div class="alert alert-danger" id="error-notification" style="margin-top:10px; display:none;">
-                    <button class="close" data-dismiss="alert" type="button">×</button>
-                    <i class="fa fa-ok-sign"></i>
-                    <strong>Error! </strong>
-                    <p id="error-notification-message"></p>
-                  </div>
-                  <a href="#" class="pull-right text-muted m-t-lg" data-toggle="class:fa-spin" ><i class="icon-refresh i-lg  inline" id="refresh"></i></a>
-                  <h2 class="font-thin m-b">Discover <span class="musicbar animate inline m-l-sm" style="width:20px;height:20px">
-                    <span class="bar1 a1 bg-primary lter"></span>
-                    <span class="bar2 a2 bg-info lt"></span>
-                    <span class="bar3 a3 bg-success"></span>
-                    <span class="bar4 a4 bg-warning dk"></span>
-                    <span class="bar5 a5 bg-danger dker"></span>
-                  </span></h2>
-                  <div class="row row-sm">
+                <section class="scrollable w-f-md" id="bjax-target">
+                  <section class="wrapper-lg">
+                    <div class="alert alert-success" id="success-notification" style="margin-top:10px; display:none;">
+                      <button class="close" data-dismiss="alert" type="button">×</button>
+                      <i class="fa fa-ok-sign"></i>
+                      <strong>Success! </strong>
+                      <p id="success-notification-message"></p>
+                    </div>
+                    <div class="alert alert-danger" id="error-notification" style="margin-top:10px; display:none;">
+                      <button class="close" data-dismiss="alert" type="button">×</button>
+                      <i class="fa fa-ok-sign"></i>
+                      <strong>Error! </strong>
+                      <p id="error-notification-message"></p>
+                    </div>
+                    <a href="#" class="pull-right text-muted m-t-lg" data-toggle="class:fa-spin" ><i class="icon-refresh i-lg  inline" id="refresh"></i></a>
+                    <h2 class="font-thin m-b">Discover <span class="musicbar animate inline m-l-sm" style="width:20px;height:20px">
+                      <span class="bar1 a1 bg-primary lter"></span>
+                      <span class="bar2 a2 bg-info lt"></span>
+                      <span class="bar3 a3 bg-success"></span>
+                      <span class="bar4 a4 bg-warning dk"></span>
+                      <span class="bar5 a5 bg-danger dker"></span>
+                    </span></h2>
+                    <div class="row row-sm">
 
-                    @if(isset($randomSongs))
-                      @foreach($randomSongs as $song)
-                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <div class="item">
-                            <div class="pos-rlt">
-                              <div class="bottom">
-                                <span class="badge bg-info m-l-sm m-b-sm">{{ floor($song->song_duration / 1000) }}s</span>
+                      @if(isset($randomSongs))
+                        @foreach($randomSongs as $song)
+                          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                            <div class="item">
+                              <div class="pos-rlt">
+                                <div class="bottom">
+                                  <span class="badge bg-info m-l-sm m-b-sm">{{ floor($song->song_duration / 1000) }}s</span>
+                                </div>
+                                <div class="item-overlay opacity r r-2x bg-black">
+                                  <div class="text-info padder m-t-sm text-sm">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o text-muted"></i>
+                                  </div>
+                                  <div class="center text-center m-t-n">
+                                    <a href="#"><i class="icon-control-play i-2x"></i></a>
+                                  </div>
+                                  <div class="bottom padder m-b-sm">
+                                    <a href="#" class="pull-right">
+                                      <i class="fa fa-heart-o"></i>
+                                    </a>
+                                    <a href="#">
+                                      <i class="fa fa-plus-circle"></i>
+                                    </a>
+                                  </div>
+                                </div>
+                                <a href="#"><img src="images/p1.jpg" alt="" class="r r-2x img-full"></a>
                               </div>
-                              <div class="item-overlay opacity r r-2x bg-black">
-                                <div class="text-info padder m-t-sm text-sm">
-                                  <i class="fa fa-star"></i>
-                                  <i class="fa fa-star"></i>
-                                  <i class="fa fa-star"></i>
-                                  <i class="fa fa-star"></i>
-                                  <i class="fa fa-star-o text-muted"></i>
-                                </div>
-                                <div class="center text-center m-t-n">
-                                  <a href="#"><i class="icon-control-play i-2x"></i></a>
-                                </div>
-                                <div class="bottom padder m-b-sm">
-                                  <a href="#" class="pull-right">
-                                    <i class="fa fa-heart-o"></i>
-                                  </a>
-                                  <a href="#">
-                                    <i class="fa fa-plus-circle"></i>
-                                  </a>
-                                </div>
+                              <div class="padder-v">
+                                <a href="#" class="text-ellipsis">{{ $song->song_name }} by {{ $song->album->artist->artist_name }}</a>
+                                <a href="#" class="text-ellipsis text-xs text-muted">{{ $song->album->album_name }}</a>
                               </div>
-                              <a href="#"><img src="images/p1.jpg" alt="" class="r r-2x img-full"></a>
-                            </div>
-                            <div class="padder-v">
-                              <a href="#" class="text-ellipsis">{{ $song->song_name }} by {{ $song->album->artist->artist_name }}</a>
-                              <a href="#" class="text-ellipsis text-xs text-muted">{{ $song->album->album_name }}</a>
                             </div>
                           </div>
-                        </div>
-                      @endforeach
-                    @endif
-                  </div>
-                  <div class="row">
-                    <div class="col-md-7">
-                      <h3 class="font-thin">New Songs</h3>
-                      <div class="row row-sm">
+                        @endforeach
+                      @endif
+                    </div>
+                    <div class="row">
+                      <div class="col-md-7">
+                        <h3 class="font-thin">New Songs</h3>
+                        <div class="row row-sm">
 
-                        @if(isset($newSongs))
-                          @foreach($newSongs as $song)
-                            <div class="col-xs-6 col-sm-3">
-                              <div class="item">
-                                <div class="pos-rlt">
-                                  <div class="item-overlay opacity r r-2x bg-black">
-                                    <div class="center text-center m-t-n">
-                                      <a href="#"><i class="fa fa-play-circle i-2x"></i></a>
+                          @if(isset($newSongs))
+                            @foreach($newSongs as $song)
+                              <div class="col-xs-6 col-sm-3">
+                                <div class="item">
+                                  <div class="pos-rlt">
+                                    <div class="item-overlay opacity r r-2x bg-black">
+                                      <div class="center text-center m-t-n">
+                                        <a href="#"><i class="fa fa-play-circle i-2x"></i></a>
+                                      </div>
                                     </div>
+                                    <a href="#"><img src="images/a2.png" alt="" class="r r-2x img-full"></a>
                                   </div>
-                                  <a href="#"><img src="images/a2.png" alt="" class="r r-2x img-full"></a>
-                                </div>
-                                <div class="padder-v">
-                                  <a href="#" class="text-ellipsis">{{ $song->song_name }}</a>
-                                  <a href="#" class="text-ellipsis text-xs text-muted">by {{ $song->album->artist->artist_name }} | {{ $song->album->album_name }}</a>
+                                  <div class="padder-v">
+                                    <a href="#" class="text-ellipsis">{{ $song->song_name }}</a>
+                                    <a href="#" class="text-ellipsis text-xs text-muted">by {{ $song->album->artist->artist_name }} | {{ $song->album->album_name }}</a>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          @endforeach
-                        @endif
+                            @endforeach
+                          @endif
 
+                        </div>
+                      </div>
+                      <div class="col-md-5">
+                        <h3 class="font-thin">Top Songs</h3>
+                        <div class="list-group bg-white list-group-lg no-bg auto">    
+      
+                          @if(isset($topSongs))
+                            <?php $index = 1 ?>
+                            @foreach($topSongs as $song)
+                              <a href="#" class="list-group-item clearfix">
+                                <span class="pull-right h2 text-muted m-l">{{ $index }}</span>
+                                <span class="pull-left thumb-sm avatar m-r">
+                                  <img src="images/a4.png" alt="...">
+                                </span>
+                                <span class="clear">
+                                  <span>{{ $song->song_name }}</span>
+                                  <small class="text-muted clear text-ellipsis">by {{ $song->album->artist->artist_name }}</small>
+                                </span>
+                              </a>
+                              <?php $index++ ?>
+                            @endforeach
+                          @endif
+
+                        </div>
                       </div>
                     </div>
-                    <div class="col-md-5">
-                      <h3 class="font-thin">Top Songs</h3>
-                      <div class="list-group bg-white list-group-lg no-bg auto">    
-    
-                        @if(isset($topSongs))
-                          <?php $index = 1 ?>
-                          @foreach($topSongs as $song)
-                            <a href="#" class="list-group-item clearfix">
-                              <span class="pull-right h2 text-muted m-l">{{ $index }}</span>
-                              <span class="pull-left thumb-sm avatar m-r">
-                                <img src="images/a4.png" alt="...">
-                              </span>
-                              <span class="clear">
-                                <span>{{ $song->song_name }}</span>
-                                <small class="text-muted clear text-ellipsis">by {{ $song->album->artist->artist_name }}</small>
-                              </span>
-                            </a>
-                            <?php $index++ ?>
-                          @endforeach
-                        @endif
-
-                      </div>
-                    </div>
-                  </div>
+                  </section> 
                 </section>
                 <footer class="footer bg-dark">
                   <div id="jp_container_N">
@@ -365,7 +367,7 @@
 
       function createPlaylist(playlistName) {
         $.post("/api/playlist", { _token: token, playlistName: playlistName })
-        .done(function(data) {
+        .done(function (data) {
           var responseArray = $.parseJSON(data.replace(/\s+/g," "));
           if(responseArray.error == 0) {
             $('#success-notification-message').html(responseArray.message);
@@ -374,6 +376,7 @@
               data = data.replace('%playlistName%', playlistName);
               $('#playlist-list').append(data);
               $('#newly-added-playlist').fadeIn().removeAttr('id');
+              loadPlaylistDashboard(playlistName);
             });
           } else {
             $('#error-notification-message').html(responseArray.message);
@@ -398,6 +401,59 @@
             keyEnabled: true,
             audioFullScreen: false
           });
+        }
+      }
+
+      function loadPlaylistDashboard(playlistId) {
+        $.get('html-snippets/playlist-page.html')
+        .done(function (dashboardContent) {
+          setDashboardContent(dashboardContent);
+          var responseArray = getPlaylistContents(playlistId);
+
+          $.get('html-snippets/playlist-content.html')
+          .done(function (dashboardContent) {
+            responseArray = $.parseJSON(responseArray['responseText'].replace(/\s+/g," "));
+            if(responseArray.error == 0) {
+              playlistContentsArray = responseArray.playlistContentsArray;
+              for (var key in playlistContentsArray) {
+                if (playlistContentsArray.hasOwnProperty(key)) {
+                  var obj = playlistContentsArray[key];
+                  $('#playlist-contents').append(
+                    dashboardContent
+                      .replace('%song_name%', obj['song_name'])
+                      .replace('%song_name%', obj['song_name'])
+                      .replace('%artist_name%', obj['artist_name'])
+                      .replace('%album_image_loc%', obj['album_image_loc'])
+                  );
+                }
+              }
+            }
+          });
+        });
+      }
+
+      function getPlaylistContents(playlistId) {
+        return $.ajax({
+          url: '/api/playlist',
+          type: 'GET',
+          async: false,
+          data: {
+            playlistId: playlistId
+          }
+        }).done(function (data) {
+          return data;
+        });
+      }
+
+      function getPlaylistId(playlistName) {
+        //get playlist id from playlist name
+        //work on playing songs from play button
+        //correct art for song list
+      }
+
+      function setDashboardContent(dashboardContent) {
+        if(dashboardContent != null) {
+          $('#bjax-target').html(dashboardContent);
         }
       }
 

@@ -416,15 +416,14 @@
   				url: '/api/' + entityType,
   				type: 'DELETE',
 	  			data: {
-	  					_token: token,
-	  					entityId: entityId
-	  				}
-	  			})
-		        .done(function(data) {
-          			var responseArray = $.parseJSON(data.replace(/\s+/g," "));
-					if(responseArray.error == 0) {
-						$('#list-' + entityType + '-' + entityId).fadeOut();
-					}
+  					_token: token,
+  					entityId: entityId
+  				}
+	  		}).done(function (data) {
+      			var responseArray = $.parseJSON(data.replace(/\s+/g," "));
+				if(responseArray.error == 0) {
+					$('#list-' + entityType + '-' + entityId).fadeOut();
+				}
 		    });
   		}
 

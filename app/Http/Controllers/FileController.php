@@ -85,7 +85,7 @@ class FileController extends Controller
             
             $file->file_name = str_replace('?', '', camel_case($songName)) . '.mp3';
             if(!Storage::exists($destinationPath . camel_case($songName) . '.mp3')) {
-                rename($destinationPath . $oldFileName, $destinationPath . $file->file_name);
+                rename($destinationPath . '/' . $oldFileName, $destinationPath . '/' . $file->file_name);
             }
             $file->save();
             return [

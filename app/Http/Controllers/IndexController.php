@@ -35,7 +35,7 @@ class IndexController extends Controller
                 $playlists = $this->playlist->getPlaylists();
 
                 $lastActivePlaylistContents = $this->playlist->getLastActivePlaylistContents();
-
+                
                 $newSongs = $this->song->getSongs(8, 'new');
                 $topSongs = $this->song->getSongs(10, 'top');
                 $randomSongs = $this->song->getSongs(12, 'random');
