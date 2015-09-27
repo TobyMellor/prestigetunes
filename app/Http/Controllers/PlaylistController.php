@@ -25,6 +25,20 @@ class PlaylistController extends Controller
     	return false;
     }
 
+    public function createPlaylistContent($songId, $playlistId)
+    {
+        if(Auth::check()) {
+            $playlistContent = new PlaylistContent;
+
+            $playlistContent->song_id = $songId;
+            $playlistContent->playlist_id = $playlistId;
+
+            $playlistContent->save();
+            return true;
+        }
+        return false;
+    }
+
     public function getPlaylist($playlistId)
     {
         $playlistInformation = PlaylistContent::with('playlist')
@@ -54,28 +68,21 @@ class PlaylistController extends Controller
 			->get();
     }
 
-    public function getLastActivePlaylistContents()
+    public function getUsersSongs()
     {
-        // $playlistContents = PlaylistContent::with(['playlist' => function($query) {
-        //     $query
-        //         ->where('user_id', Auth::user()->id)
-        //         ->orderBy('created_at', 'desc')
-        //         ->take(1);
-        // }])
-        //     ->orderBy('created_at', 'desc')
-        //     ->get();
+        $usersSongs = PlaylistContent::whereHas('playlist', function($query) {
+            $query->where('user_id', Auth::user()->id);
+        })->orderBy('created_at', 'desc')->get();
 
-        // $playlistContents = PlaylistContent::with(['playlist' => function($query) {
-        //     $query->where('user_id', Auth::user()->id)->toSql();
-        // }])->orderBy('created_at', 'desc')->get();
-        // var_dump($playlistContents);
-        
-        $playlist = Playlist::where('user_id', Auth::user()->id)
-            ->orderBy('created_at', 'desc')
-            ->first();
-        $playlistContents = PlaylistContent::with('Song')->where('playlist_id', $playlist->id)
-            ->get();
+        return $usersSongs;
+    }
 
-        return $playlistContents;
+    public function deletePlaylist($playlistId)
+    {
+        if(Auth::check()) {
+            $playlist = Playlist::destroy($playlistId);
+            return true;
+        }
+        return false;
     }
 }

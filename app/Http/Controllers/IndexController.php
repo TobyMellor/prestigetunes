@@ -34,7 +34,7 @@ class IndexController extends Controller
             if(!Auth::user()->priviledge) {
                 $playlists = $this->playlist->getPlaylists();
 
-                $lastActivePlaylistContents = $this->playlist->getLastActivePlaylistContents();
+                $usersSongs = $this->playlist->getUsersSongs();
                 
                 $newSongs = $this->song->getSongs(8, 'new');
                 $topSongs = $this->song->getSongs(10, 'top');
@@ -42,7 +42,7 @@ class IndexController extends Controller
 
                 return view('default.index')
                     ->with('playlists', $playlists)
-                    ->with('lastActivePlaylistContents', $lastActivePlaylistContents)
+                    ->with('usersSongs', $usersSongs)
                     ->with('userName', Auth::user()->name)
 
                     ->with('newSongs', $newSongs)

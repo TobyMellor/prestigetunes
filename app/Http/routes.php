@@ -31,7 +31,11 @@ Route::get('/logout', 'UserController@unauthenticateUser');
  * Routes used by JavaScript AJAX only
  */
 Route::post('/api/playlist', 'ApiController@createPlaylist');
-Route::get('/api/playlist', 'ApiController@getPlaylist');
+Route::post('/api/playlist/content', 'ApiController@createPlaylistContent');
+
+Route::get('/api/playlist/content', 'ApiController@getPlaylistContent');
+
+Route::delete('/api/playlist', 'ApiController@deletePlaylist');
 Route::delete('/api/user', 'ApiController@deleteUser');
 Route::delete('/api/album', 'ApiController@deleteAlbum');
 Route::delete('/api/artist', 'ApiController@deleteArtist');

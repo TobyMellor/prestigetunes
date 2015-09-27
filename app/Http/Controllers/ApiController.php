@@ -42,7 +42,32 @@ class ApiController extends Controller
 		}
     }
 
-    public function getPlaylist(PlaylistController $playlist)
+    public function createPlaylistContent(PlaylistController $playlist)
+    {
+        $songId = $this->request->input('songId');
+        $playlistId = $this->request->input('playlistId');
+
+        if(isset($songId)
+                && $songId != null
+                && $this->doValidation('songId', [
+                    'songId' => $songId
+                ])
+                && isset($playlistId)
+                && $playlistId != null
+                && $this->doValidation('playlistId', [
+                    'playlistId' => $playlistId
+                ])) {
+            if(!$playlist->createPlaylistContent($songId, $playlistId)) {
+                $this->responseError = 1;
+                $this->responseMessage = 'An error occured whilst adding a song to a playlist. Try refreshing the page.';
+            }
+        } else {
+            $this->responseError = 1;
+            $this->responseMessage = 'Playlist ID or Song ID is not valid. Try refreshing the page.';
+        }
+    }
+
+    public function getPlaylistContent(PlaylistController $playlist)
     {
         $playlistId = $this->request->input('playlistId');
 
@@ -146,6 +171,21 @@ class ApiController extends Controller
         }
     }
 
+    public function deletePlaylist(PlaylistController $playlist)
+    {
+        $playlistId = $this->request->input('playlistId');
+
+        if(isset($playlistId) && $playlistId != null) {
+            if(!$playlist->deletePlaylist(intval($playlistId))) {
+                $this->responseError = 1;
+                $this->responseMessage = 'You\'re not logged in or something went wrong. Try refreshing.';
+            }
+        } else {
+            $this->responseError = 1;
+            $this->responseMessage = 'User ID is not valid';
+        }
+    }
+
     public function doValidation($type, $data)
     {
     	if($type == 'playlistName') {
@@ -155,6 +195,10 @@ class ApiController extends Controller
     	} elseif($type == 'playlistId') {
             $validation = [
                 'playlistId' => 'integer|exists:Playlists,id'
+            ];
+        } elseif($type == 'songId') {
+            $validation = [
+                'songId' => 'integer|exists:Songs,id'
             ];
         } else {
             return false;
