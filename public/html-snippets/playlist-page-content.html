@@ -1,7 +1,10 @@
 <li class="list-group-item clearfix" style="border-radius: 0;">
-    <a href="#" class="jp-play-me pull-right m-t-sm m-l text-md">
+    <a href="javascript:;" class="pull-right m-t-sm m-l text-md" onclick="addToPlayingPlaylist({
+        title: '%song_name%',
+        artist: '%artist_name%',
+        mp3: '%file_name%'
+    }); $(this).html('<i class=\'icon-control-pause text\'></i>')">
         <i class="icon-control-play text"></i>
-        <i class="icon-control-pause text-active"></i>
     </a>
     <a href="#" class="pull-left thumb-sm m-r">
         <img src="%album_image_loc%" alt="%song_name%">

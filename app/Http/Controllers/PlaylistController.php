@@ -49,7 +49,7 @@ class PlaylistController extends Controller
         $playlistContents = [];
 
         foreach($playlistInformation as $playlistContent) {
-            $playlistContents[$playlistContent->song->song_id . rand(1,5)] = [
+            $playlistContents[$playlistContent->song->id] = [
                 'song_name' => $playlistContent->song->song_name,
                 'album_name' => $playlistContent->song->album->album_name,
                 'album_image_loc' => $playlistContent->song->album->album_image_loc,

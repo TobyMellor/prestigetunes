@@ -9,10 +9,10 @@
         <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen,open" data-target="#nav,html">
           <i class="icon-list"></i>
         </a>
-        <a href="index.html" class="navbar-brand text-lt">
+        <a href="/" class="navbar-brand text-lt">
           <i class="icon-earphones"></i>
           <img src="images/logo.png" alt="." class="hide">
-          <span class="hidden-nav-xs m-l-sm">Musik</span>
+          <span class="hidden-nav-xs m-l-sm">PrestigeTunes</span>
         </a>
         <a class="btn btn-link visible-xs" data-toggle="dropdown" data-target=".user">
           <i class="icon-settings"></i>
@@ -31,33 +31,16 @@
       <div class="navbar-right ">
         <ul class="nav navbar-nav m-n hidden-xs nav-user user">
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle bg clear" data-toggle="dropdown">
-              <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
-                <img src="images/a0.png" alt="...">
-              </span>
-              {{ Auth::user()->name }} <b class="caret"></b>
+            <a href="javascript:;" class="dropdown-toggle bg clear" data-toggle="dropdown">
+            <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+            <img src="images/a0.png" alt="...">
+            </span>
+            {{ Auth::user()->name }} <b class="caret"></b>
             </a>
-            <ul class="dropdown-menu animated fadeInRight">            
-              <li>
-                <span class="arrow top"></span>
-                <a href="#">Settings</a>
-              </li>
-              <li>
-                <a href="profile.html">Profile</a>
-              </li>
-              <li>
-                <a href="#">
-                  <span class="badge bg-danger pull-right">3</span>
-                  Notifications
-                </a>
-              </li>
-              <li>
-                <a href="docs.html">Help</a>
-              </li>
-              <li class="divider"></li>
-              <li>
-                <a href="modal.lockme.html" data-toggle="ajaxModal" >Logout</a>
-              </li>
+            <ul class="dropdown-menu animated fadeInRight">
+                <li>
+                    <a href="logout">Logout</a>
+                </li>
             </ul>
           </li>
         </ul>
@@ -229,7 +212,7 @@
 				                        	@foreach($artists as $artist)
 												<li class="list-group-item" id="list-artist-{{ $artist->id }}">
 													<a class="thumb-sm pull-left m-r-sm" href="#">
-														<img class="img-circle" src="images/a0.png">
+														<img class="img-circle" src="{{ $artist->artist_image_loc }}">
 													</a>
 													<a class="clear">
 														<small class="pull-right">{{ $artist->created_at }}</small>
@@ -284,7 +267,7 @@
 				                        	@foreach($albums as $album)
 												<li class="list-group-item" id="list-album-{{ $album->id }}">
 													<a class="thumb-sm pull-left m-r-sm" href="#">
-														<img class="img-circle" src="images/a0.png">
+														<img class="img-circle" src="{{ $album->album_image_loc }}">
 													</a>
 													<a class="clear">
 														<small class="pull-right">{{ $album->created_at }}</small>
@@ -348,7 +331,7 @@
 				                        	@foreach($songs as $song)
 												<li class="list-group-item" id="list-song-{{ $song->id }}">
 													<a class="thumb-sm pull-left m-r-sm" href="#">
-														<img class="img-circle" src="images/a0.png">
+														<img class="img-circle" src="{{ $song->album->album_image_loc }}">
 													</a>
 													<a class="clear">
 														<small class="pull-right">{{ $song->created_at }}</small>

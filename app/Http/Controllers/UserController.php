@@ -72,7 +72,7 @@ class UserController extends Controller
             if(Auth::check() && Auth::user()->priviledge) {
                 return redirect('/')->with('successMessage', 'The user has been successfully created');
             }
-            return redirect('/');
+            return redirect('/login')->with('successMessage', 'You have successfully signed up. Sign in!');
         } else {
             $ghostUser = User::onlyTrashed()->where('email', $data['email'])->first();
 

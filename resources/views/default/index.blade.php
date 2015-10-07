@@ -22,7 +22,7 @@
                 <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen,open" data-target="#nav,html">
                 <i class="icon-list"></i>
                 </a>
-                <a href="index.html" class="navbar-brand text-lt">
+                <a href="/" class="navbar-brand text-lt">
                 <i class="icon-earphones"></i>
                 <img src="images/logo.png" alt="." class="hide">
                 <span class="hidden-nav-xs m-l-sm">PrestigeTunes</span>
@@ -44,7 +44,7 @@
             <div class="navbar-right ">
                 <ul class="nav navbar-nav m-n hidden-xs nav-user user">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle bg clear" data-toggle="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle bg clear" data-toggle="dropdown">
                         <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
                         <img src="images/a0.png" alt="...">
                         </span>
@@ -87,13 +87,13 @@
                                     </ul>
                                     <ul class="nav text-sm" id="playlist-list">
                                         <li class="hidden-nav-xs padder m-t m-b-sm text-xs text-muted">
-                                            <span class="pull-right"><a href="#" data-toggle="modal" data-target="#createPlaylistModal"><i class="icon-plus i-lg"></i></a></span>
+                                            <span class="pull-right"><a href="javascript:;" data-toggle="modal" data-target="#createPlaylistModal"><i class="icon-plus i-lg"></i></a></span>
                                             <span>Playlist</span>
                                         </li>
                                         @if($playlists != null)
                                             @foreach($playlists as $playlist)
-                                                <li class="playlist-list-item" playlist-id="{{ $playlist->id }}">
-                                                    <a href="#">
+                                                <li class="playlist-list-item" playlist-id="{{ $playlist->id }}" playlist-name="{{ $playlist->playlist_name }}">
+                                                    <a href="javascript:;">
                                                     <i class="icon-playlist icon text-success-lter"> </i>
                                                     <span>{{ $playlist->playlist_name }}</span>
                                                     </a>
@@ -150,7 +150,7 @@
                                             <strong>Error! </strong>
                                             <p id="error-notification-message"></p>
                                         </div>
-                                        <a href="#" class="pull-right text-muted m-t-lg" data-toggle="class:fa-spin" ><i class="icon-refresh i-lg  inline" id="refresh"></i></a>
+                                        <a href="javascript:;" class="pull-right text-muted m-t-lg" data-toggle="class:fa-spin" ><i class="icon-refresh i-lg  inline" id="refresh"></i></a>
                                         <h2 class="font-thin m-b">Discover <span class="musicbar animate inline m-l-sm" style="width:20px;height:20px">
                                             <span class="bar1 a1 bg-primary lter"></span>
                                             <span class="bar2 a2 bg-info lt"></span>
@@ -177,22 +177,31 @@
                                                                         <i class="fa fa-star-o text-muted"></i>
                                                                     </div>
                                                                     <div class="center text-center m-t-n">
-                                                                        <a href="#"><i class="icon-control-play i-2x"></i></a>
+                                                                        <a href="javascript:;" onclick="addToPlayingPlaylist({
+                                                                            title: '{{ $song->song_name }}',
+                                                                            artist: '{{ $song->album->artist->artist_name }}',
+                                                                            mp3: 'uploads/{{ $song->file->file_name }}'
+                                                                        }); $(this).html('<i class=\'icon-control-pause i-2x\'></i>')"><i class="icon-control-play i-2x"></i></a>
                                                                     </div>
                                                                     <div class="bottom padder m-b-sm">
-                                                                        <a href="#" class="pull-right">
+                                                                        <a href="javascript:;" class="pull-right">
                                                                         <i class="fa fa-heart-o"></i>
                                                                         </a>
-                                                                        <a href="#" class="add-song-list-playlists" song-id="{{ $song->id }}">
+                                                                        <a href="javascript:;" class="add-song-list-playlists" song-id="{{ $song->id }}">
                                                                             <i class="fa fa-plus-circle"></i>
                                                                         </a>
                                                                     </div>
                                                                 </div>
-                                                                <a href="#"><img src="{{ $song->album->album_image_loc }}" alt="" class="r r-2x img-full"></a>
+                                                                <a href="javascript:;"><img src="{{ $song->album->album_image_loc }}" alt="" class="r r-2x img-full"></a>
                                                             </div>
                                                             <div class="padder-v">
-                                                                <a href="#" class="text-ellipsis">{{ $song->song_name }} by {{ $song->album->artist->artist_name }}</a>
-                                                                <a href="#" class="text-ellipsis text-xs text-muted">{{ $song->album->album_name }}</a>
+                                                                <a href="javascript:;" class="text-ellipsis">{{ $song->song_name }} by {{ $song->album->artist->artist_name }}</a>
+                                                                <a class="text-ellipsis text-xs text-muted" href="javascript:;" style="height: 18px;">
+                                                                {{ $song->album->album_name }} 
+                                                                @if($song->is_explicit)
+                                                                    <span class="label bg-danger">Explicit</span>
+                                                                @endif
+                                                                </a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -209,15 +218,37 @@
                                                                 <div class="item">
                                                                     <div class="pos-rlt">
                                                                         <div class="item-overlay opacity r r-2x bg-black">
+                                                                            <div class="text-info padder m-t-sm text-sm">
+                                                                                <i class="fa fa-star"></i>
+                                                                                <i class="fa fa-star"></i>
+                                                                                <i class="fa fa-star"></i>
+                                                                                <i class="fa fa-star"></i>
+                                                                                <i class="fa fa-star-o text-muted"></i>
+                                                                            </div>
                                                                             <div class="center text-center m-t-n">
-                                                                                <a href="#"><i class="fa fa-play-circle i-2x"></i></a>
+                                                                                <a href="javascript:;" onclick="addToPlayingPlaylist({
+                                                                                    title: '{{ $song->song_name }}',
+                                                                                    artist: '{{ $song->album->artist->artist_name }}',
+                                                                                    mp3: 'uploads/{{ $song->file->file_name }}'
+                                                                                }); $(this).html('<i class=\'icon-control-pause i-2x\'></i>')"><i class="icon-control-play i-2x"></i></a>
+                                                                            </div>
+                                                                            <div class="bottom padder m-b-sm">
+                                                                                <a href="javascript:;" class="pull-right">
+                                                                                <i class="fa fa-heart-o"></i>
+                                                                                </a>
+                                                                                <a href="javascript:;" class="add-song-list-playlists" song-id="{{ $song->id }}">
+                                                                                    <i class="fa fa-plus-circle"></i>
+                                                                                </a>
                                                                             </div>
                                                                         </div>
-                                                                        <a href="#"><img src="{{ $song->album->album_image_loc }}" alt="{{ $song->song_name }} Album Cover" class="r r-2x img-full"></a>
+                                                                        <a href="javascript:;"><img src="{{ $song->album->album_image_loc }}" alt="{{ $song->song_name }} Album Cover" class="r r-2x img-full"></a>
                                                                     </div>
                                                                     <div class="padder-v">
-                                                                        <a href="#" class="text-ellipsis">{{ $song->song_name }}</a>
-                                                                        <a href="#" class="text-ellipsis text-xs text-muted">by {{ $song->album->artist->artist_name }} | {{ $song->album->album_name }}</a>
+                                                                        <a href="javascript:;" class="text-ellipsis">{{ $song->song_name }}</a>
+                                                                        <a href="javascript:;" class="text-ellipsis text-xs text-muted">by {{ $song->album->artist->artist_name }} | {{ $song->album->album_name }}</a>
+                                                                        @if($song->is_explicit)
+                                                                            <span class="label bg-danger">Explicit</span>
+                                                                        @endif
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -231,7 +262,7 @@
                                                     @if(isset($topSongs))
                                                         <?php $index = 1 ?>
                                                         @foreach($topSongs as $song)
-                                                            <a href="#" class="list-group-item clearfix">
+                                                            <a href="javascript:;" class="list-group-item clearfix">
                                                                 <span class="pull-right h2 text-muted m-l">{{ $index }}</span>
                                                                 <span class="pull-left thumb-sm avatar m-r">
                                                                     <img src="{{ $song->album->album_image_loc }}" alt="{{ $song->song_name }} Album Cover">
@@ -321,7 +352,7 @@
                             </section>
                         </section>
                     </section>
-                    <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
+                    <a href="javascript:;" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
                 </section>
             </section>
         </section>
@@ -336,7 +367,7 @@
             });
 
             $('.playlist-list-item').click(function() {
-                loadPlaylistDashboard($(this).attr('playlist-id'));
+                loadPlaylistDashboard($(this).attr('playlist-id'), $(this).attr('playlist-name'));
             });
 
             $('.add-song-list-playlists').click(function() {
@@ -384,8 +415,7 @@
                     {
                         title: "{{ $song->song->song_name }}",
                         artist: "{{ $song->song->album->artist->artist_name }}",
-                        mp3: "uploads/{{ $song->song->file->file_name }}",
-                        poster: "{{ $song->song->album->album_image_loc }}"
+                        mp3: "uploads/{{ $song->song->file->file_name }}"
                     },
                 @endforeach
             ]
@@ -421,7 +451,7 @@
                         data = data.replace('%playlistName%', playlistName);
                         $('#playlist-list').append(data);
                         $('#newly-added-playlist').fadeIn().removeAttr('id');
-                        loadPlaylistDashboard(playlistName);
+                        loadPlaylistDashboard(playlistName, playlistName);
                     });
                 } else {
                     $('#error-notification-message').html(responseArray.message);
@@ -449,8 +479,43 @@
             });
         }
 
+        function addToPlayingPlaylist(songObject) {
+            if(isNaN(songObject)) {
+                myPlaylist.add(songObject, {playNow: true});
+            } else {
+                var playlistId = songObject;
+
+                var responseArray = getPlaylistContents(playlistId);
+                responseArray = $.parseJSON(responseArray['responseText'].replace(/\s+/g, " "));
+
+                var playingPlaylist = [];
+
+                for (var key in playlistContentsArray) {
+                    if (playlistContentsArray.hasOwnProperty(key)) {
+                        var obj = playlistContentsArray[key];
+
+                        playingPlaylist.push({
+                            title: obj['song_name'],
+                            artist: obj['artist_name'],
+                            mp3: 'uploads/' + obj['file_name']
+                        });
+                    }
+                }
+
+                setPlayingPlaylist(playingPlaylist);
+
+                //bug?
+                myPlaylist.next();
+                myPlaylist.previous();
+            }
+        }
+
         function setPlayingPlaylist(playlistContentObject) {
             if (playlistContentObject != null) {
+                if(myPlaylist != null)
+                    myPlaylist.remove();
+
+                //consider setting playlist instead of re-writing a new one
                 myPlaylist = new jPlayerPlaylist({
                     jPlayer: "#jplayer_N",
                     cssSelectorAncestor: "#jp_container_N"
@@ -468,7 +533,7 @@
             }
         }
 
-        function loadPlaylistDashboard(playlistId) {
+        function loadPlaylistDashboard(playlistId, playlistName) {
             var responseArray = getPlaylistContents(playlistId);
             responseArray = $.parseJSON(responseArray['responseText'].replace(/\s+/g, " "));
 
@@ -481,7 +546,10 @@
                         $.get('html-snippets/playlist-page-content.html')
                         .done(function(dashboardContentMeta) {
 
-                            setDashboardContent(dashboardContent.replace('%playlist_id%', playlistId));
+                            setDashboardContent(dashboardContent
+                                .split('%playlist_id%').join(playlistId)
+                                .split('%playlist_name%').join(playlistName)
+                            );
                             playlistContentsArray = responseArray.playlistContentsArray;
 
                             for (var key in playlistContentsArray) {
@@ -490,9 +558,9 @@
 
                                     $('#playlist-contents').append(
                                         dashboardContentMeta
-                                        .replace('%song_name%', obj['song_name'])
-                                        .replace('%song_name%', obj['song_name'])
-                                        .replace('%artist_name%', obj['artist_name'])
+                                        .split('%song_name%').join(obj['song_name'])
+                                        .split('%artist_name%').join(obj['artist_name'])
+                                        .replace('%file_name%', 'uploads/' + obj['file_name'])
                                         .replace('%album_image_loc%', obj['album_image_loc'])
                                     );
                                 }
