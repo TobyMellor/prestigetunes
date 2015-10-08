@@ -67,6 +67,29 @@ class ApiController extends Controller
         }
     }
 
+    public function addRating(SongController $song)
+    {
+        $songId = $this->request->input('songId');
+        $songRating = $this->request->input('songRating');
+
+        if(isset($songId)
+                && isset($songRating)
+                && $songId != null
+                && $songRating != null
+                && $this->doValidation('rating', [
+                    'songId' => $songId,
+                    'songRating' => $songRating
+                ])) {
+            if(!$song->addRating($songId, $songRating)) {
+                $this->responseError = 1;
+                $this->responseMessage = 'You might not be logged in, or you\'ve already rated this song before. Try refreshing the page.';
+            }
+        } else {
+            $this->responseError = 1;
+            $this->responseMessage = 'Song ID or Song Rating is not valid. Try refreshing the page.';
+        }
+    }
+
     public function getPlaylistContent(PlaylistController $playlist)
     {
         $playlistId = $this->request->input('playlistId');

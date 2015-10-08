@@ -169,12 +169,12 @@
                                                                     <span class="badge bg-info m-l-sm m-b-sm">{{ floor($song->song_duration / 1000) }}s</span>
                                                                 </div>
                                                                 <div class="item-overlay opacity r r-2x bg-black">
-                                                                    <div class="text-info padder m-t-sm text-sm">
-                                                                        <i class="fa fa-star"></i>
-                                                                        <i class="fa fa-star"></i>
-                                                                        <i class="fa fa-star"></i>
-                                                                        <i class="fa fa-star"></i>
-                                                                        <i class="fa fa-star-o text-muted"></i>
+                                                                    <div class="text-info padder m-t-sm text-sm star-set" song-id="{{ $song->id }}">
+                                                                        <i class="fa fa-star rating-star" rating="1" style="cursor: pointer;"></i>
+                                                                        <i class="fa fa-star rating-star" rating="2" style="cursor: pointer;"></i>
+                                                                        <i class="fa fa-star rating-star" rating="3" style="cursor: pointer;"></i>
+                                                                        <i class="fa fa-star rating-star" rating="4" style="cursor: pointer;"></i>
+                                                                        <i class="fa fa-star-o text-muted rating-star" rating="5" style="cursor: pointer;"></i>
                                                                     </div>
                                                                     <div class="center text-center m-t-n">
                                                                         <a href="javascript:;" onclick="addToPlayingPlaylist({
@@ -184,9 +184,6 @@
                                                                         }); $(this).html('<i class=\'icon-control-pause i-2x\'></i>')"><i class="icon-control-play i-2x"></i></a>
                                                                     </div>
                                                                     <div class="bottom padder m-b-sm">
-                                                                        <a href="javascript:;" class="pull-right">
-                                                                        <i class="fa fa-heart-o"></i>
-                                                                        </a>
                                                                         <a href="javascript:;" class="add-song-list-playlists" song-id="{{ $song->id }}">
                                                                             <i class="fa fa-plus-circle"></i>
                                                                         </a>
@@ -218,12 +215,12 @@
                                                                 <div class="item">
                                                                     <div class="pos-rlt">
                                                                         <div class="item-overlay opacity r r-2x bg-black">
-                                                                            <div class="text-info padder m-t-sm text-sm">
-                                                                                <i class="fa fa-star"></i>
-                                                                                <i class="fa fa-star"></i>
-                                                                                <i class="fa fa-star"></i>
-                                                                                <i class="fa fa-star"></i>
-                                                                                <i class="fa fa-star-o text-muted"></i>
+                                                                            <div class="text-info padder m-t-sm text-sm" song-id="{{ $song->id }}">
+                                                                                <i class="fa fa-star" style="cursor: pointer;"></i>
+                                                                                <i class="fa fa-star" style="cursor: pointer;"></i>
+                                                                                <i class="fa fa-star" style="cursor: pointer;"></i>
+                                                                                <i class="fa fa-star" style="cursor: pointer;"></i>
+                                                                                <i class="fa fa-star-o text-muted" style="cursor: pointer;"></i>
                                                                             </div>
                                                                             <div class="center text-center m-t-n">
                                                                                 <a href="javascript:;" onclick="addToPlayingPlaylist({
@@ -233,9 +230,6 @@
                                                                                 }); $(this).html('<i class=\'icon-control-pause i-2x\'></i>')"><i class="icon-control-play i-2x"></i></a>
                                                                             </div>
                                                                             <div class="bottom padder m-b-sm">
-                                                                                <a href="javascript:;" class="pull-right">
-                                                                                <i class="fa fa-heart-o"></i>
-                                                                                </a>
                                                                                 <a href="javascript:;" class="add-song-list-playlists" song-id="{{ $song->id }}">
                                                                                     <i class="fa fa-plus-circle"></i>
                                                                                 </a>
@@ -400,6 +394,39 @@
 
             setPlayingPlaylist(initialPlaylist);
 
+        });
+
+        var lastHoveredSong = null;
+
+        //newly added elements to DOM don't get registered unless we do this
+        $(document).on('mouseenter', '.rating-star', function() {
+
+            var starElementParent = $(this).parent();
+
+            if(lastHoveredSong == null || lastHoveredSong[0] != starElementParent.attr('song-id')) {
+                lastHoveredSong = [
+                    starElementParent.attr('song-id'),
+                    starElementParent.html()
+                ];
+            }
+
+            var hoveredStar = $(this).attr('rating');
+
+            starElementParent.empty();
+
+            for (star = 1; star <= 5; star++) {
+                if(star <= hoveredStar) {
+                    starElementParent.append('<i class="fa fa-star rating-star" rating="' + star + '" style="cursor: pointer;"></i> ');
+                } else {
+                    starElementParent.append('<i class="fa fa-star-o text-muted rating-star" rating="' + star + '" style="cursor: pointer;"></i> ');
+                }
+            }
+        }).on('mouseout', '.star-set', function() {
+            if(lastHoveredSong != null) {
+                $(this).html(lastHoveredSong[1]);
+            }
+        }).on('click', '.rating-star', function() {
+            alert(submitRating($(this).parent().attr('song-id'), $(this).attr('rating')));
         });
 
         //Javascript Functions
@@ -622,6 +649,26 @@
                 $('.dropdown-playlists').fadeOut(500, function() { $(this).remove(); });
                 activeDropdown = null;
             }
+        }
+
+        function submitRating(songRating, songId) {
+            $.ajax({
+                url: '/api/rating',
+                type: 'POST',
+                async: false,
+                data: {
+                    _token: token,
+                    songRating: songRating,
+                    songId: songId
+                }
+            }).done(function(data) {
+                var responseArray = $.parseJSON(data.replace(/\s+/g, " "));
+                if(!responseArray.error) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
         }
 
         $(document).ready(function() {

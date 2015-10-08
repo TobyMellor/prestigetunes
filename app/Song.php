@@ -20,6 +20,7 @@ class Song extends Model
      */
     protected $fillable = [
         'song_name',
+        'song_rating',
         'album_id',
         'song_duration',
         'is_explicit',

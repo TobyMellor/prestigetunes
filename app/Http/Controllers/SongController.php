@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Song;
+use App\Rating;
 use App\Album;
 use Auth;
 use Validator;
@@ -85,15 +86,40 @@ class SongController extends Controller
         }
     }
 
-    public function deleteSong($songId)
+    public function addRating($songId, $songRating)
     {
         if(Auth::check()) {
-            $song = Song::where('id', $songId)->first();
+            $previousRating = Rating::where('user_id', Auth::user()->id)
+                ->where('song_id', $songId)
+                ->count();
+            if($previousRating == 0) {
+                Rating::create([
+                    'user_id' => Auth::user()->id,
+                    'song_id' => $songId
+                ]);
 
-            if($this->file->deleteFile($song->file_id)) {
-                Song::destroy($songId);
+                $song = Song::find($songId);
+                $songTotalRating = $song->song_rating + $songRating;
+                $song->song_rating = $songTotalRating;
+                $song->save();
+
                 return true;
             }
+        }
+        return false;
+    }
+
+    public function getSongRating($songId, $songTotalRating = null)
+    {
+        if(Auth::check()) {
+            if($songTotalRating == null) {
+                $song = Song::find($songId);
+                $songTotalRating = $song->song_rating;
+            }
+            $songRatingCount = Rating::where('song_id', $songId)->count();
+            $songRating = $songTotalRating / $songRatingCount;
+
+            return $songRating;
         }
         return false;
     }
@@ -127,6 +153,19 @@ class SongController extends Controller
     {
         $song = Song::find($songId);
         return $song;
+    }
+
+    public function deleteSong($songId)
+    {
+        if(Auth::check()) {
+            $song = Song::where('id', $songId)->first();
+
+            if($this->file->deleteFile($song->file_id)) {
+                Song::destroy($songId);
+                return true;
+            }
+        }
+        return false;
     }
 
     protected function validator(array $data)

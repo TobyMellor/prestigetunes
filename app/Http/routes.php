@@ -32,6 +32,7 @@ Route::get('/logout', 'UserController@unauthenticateUser');
  */
 Route::post('/api/playlist', 'ApiController@createPlaylist');
 Route::post('/api/playlist/content', 'ApiController@createPlaylistContent');
+Route::post('/api/rating', 'ApiController@addRating');
 
 Route::get('/api/playlist/content', 'ApiController@getPlaylistContent');
 

@@ -16,6 +16,7 @@ class CreateSongsTable extends Migration
             $table->increments('id');
             $table->string('song_name', 30);
             $table->integer('album_id')->unsigned();
+            $table->integer('song_rating');
             $table->integer('song_duration');
             $table->integer('is_explicit');
             $table->integer('file_id')->unique()->unsigned();
